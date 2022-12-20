@@ -9,22 +9,25 @@ export function useSpeechRecognition() {
   const Recognition = new window.SpeechRecognition();
   Recognition.continuous = true;
   Recognition.interimResults = true;
-
   const startSpeechRec = () => Recognition.start();
   const stopSpeechRec = () => {
     Recognition.stop();
   };
+  const addToTranscript = (speechRecTranscript) => {
+    setTranscript((prevValue) => {
+      if (!prevValue) {
+        return speechRecTranscript;
+      } else {
+        return prevValue + speechRecTranscript.slice(prevValue.length);
+      }
+    });
+  };
   Recognition.onresult = (evt) => {
     const speechRecResult = evt.results;
-    [...speechRecResult]
-      // eslint-disable-next-line array-callback-return
-      .map((currentSpeechRec) => {
-        // setTranscript(
-        //   (prevValue) => prevValue + currentSpeechRec[0].transcript
-        // );
-        setTranscript(currentSpeechRec[0].transcript);
-      })
-      .join(" ");
+    [...speechRecResult].forEach((currentSpeechRec) => {
+      console.log(currentSpeechRec[0].transcript);
+      addToTranscript(currentSpeechRec[0].transcript);
+    });
   };
   Recognition.onend = () => {
     Recognition.start();
@@ -32,7 +35,6 @@ export function useSpeechRecognition() {
   Recognition.onerror = (evt) => {
     setSpeechErrMessage(evt.error);
   };
-
   useLayoutEffect(() => {
     if (!(`SpeechRecognition` in window)) {
       setBrowserSupport(false);
@@ -41,6 +43,7 @@ export function useSpeechRecognition() {
   return {
     browserSupport,
     transcript,
+    setTranscript,
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
