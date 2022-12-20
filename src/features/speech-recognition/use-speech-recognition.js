@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState, useRef } from "react";
 
 export function useSpeechRecognition() {
   const [browserSupport, setBrowserSupport] = useState(true);
@@ -9,7 +9,12 @@ export function useSpeechRecognition() {
   const Recognition = new window.SpeechRecognition();
   Recognition.continuous = true;
   Recognition.interimResults = true;
-  const startSpeechRec = () => Recognition.start();
+  const clickedRef = useRef(false);
+  const startSpeechRec = () => {
+    // calling Recognition.start() more than once throws an error
+    if (!clickedRef.current) Recognition.start();
+    clickedRef.current = true;
+  };
   const stopSpeechRec = () => {
     Recognition.stop();
   };
@@ -22,6 +27,7 @@ export function useSpeechRecognition() {
       }
     });
   };
+  Recognition.onsoundstart = (ev) => {};
   Recognition.onresult = (evt) => {
     const speechRecResult = evt.results;
     [...speechRecResult].forEach((currentSpeechRec) => {
@@ -44,6 +50,7 @@ export function useSpeechRecognition() {
     browserSupport,
     transcript,
     setTranscript,
+    Recognition,
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
