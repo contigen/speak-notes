@@ -4,12 +4,13 @@ export function useSpeechRecognition() {
   const [browserSupport, setBrowserSupport] = useState(true);
   const [transcript, setTranscript] = useState(``);
   const [speechErrMessage, setSpeechErrMessage] = useState(``);
+  const [noMatch, setNoMatch] = useState(false);
+  const [listening, setListening] = useState(false);
   window.SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
   const Recognition = new window.SpeechRecognition();
-  Recognition.continuous = true;
-  Recognition.interimResults = true;
   const clickedRef = useRef(false);
+  let transcriptRef = useRef(``);
   const startSpeechRec = () => {
     // calling Recognition.start() more than once throws an error
     if (!clickedRef.current) Recognition.start();
@@ -17,23 +18,30 @@ export function useSpeechRecognition() {
   };
   const stopSpeechRec = () => {
     Recognition.stop();
+    setListening(false);
   };
-  const addToTranscript = (speechRecTranscript) => {
-    setTranscript((prevValue) => {
-      if (!prevValue) {
-        return speechRecTranscript;
-      } else {
-        return prevValue + speechRecTranscript.slice(prevValue.length);
-      }
-    });
+  Recognition.onstart = () => setSpeechErrMessage(``);
+
+  Recognition.onaudiostart = (ev) => {
+    setListening(true);
   };
-  Recognition.onsoundstart = (ev) => {};
+  Recognition.onaudioend = () => {
+    setListening(false);
+  };
+  Recognition.onsoundstart = (ev) => {
+    // setNomatch()
+  };
+  Recognition.onnomatch = () => {
+    setNoMatch(true);
+  };
   Recognition.onresult = (evt) => {
+    let newArr = [];
     const speechRecResult = evt.results;
-    [...speechRecResult].forEach((currentSpeechRec) => {
-      console.log(currentSpeechRec[0].transcript);
-      addToTranscript(currentSpeechRec[0].transcript);
+    [...speechRecResult].forEach((currentSpeechRes) => {
+      newArr.push(currentSpeechRes[0].transcript);
+      transcriptRef.current = currentSpeechRes[0].transcript;
     });
+    setTranscript((prev) => prev + ` ` + newArr.join());
   };
   Recognition.onend = () => {
     Recognition.start();
@@ -50,9 +58,11 @@ export function useSpeechRecognition() {
     browserSupport,
     transcript,
     setTranscript,
-    Recognition,
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
+    noMatch,
+    listening,
+    transcriptRef,
   };
 }
