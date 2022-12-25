@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
 import { useSpeechRecognition } from "./use-speech-recognition";
-import { BrowserList } from "../ui/";
+import firstAudioUrl from "../../sounds/audio-start.mp3";
+import secondAudioUrl from "../../sounds/audio-end.mp3";
 
 export const SpeechRecognition = () => {
   const {
@@ -9,42 +10,67 @@ export const SpeechRecognition = () => {
     setTranscript,
     speechErrMessage,
     startSpeechRec,
+    stopSpeechRec,
+    noMatch,
+    listening,
+    transcriptRef,
+    clickedRef,
   } = useSpeechRecognition();
+
   const linkRef = useRef();
+  const audioStartRef = useRef(new Audio(firstAudioUrl));
+  const audioEndRef = useRef(new Audio(secondAudioUrl));
+
+  const playSpeechRec = () => {
+    if (!clickedRef.current) {
+      audioStartRef.current.play();
+    }
+    startSpeechRec();
+  };
+  const stopSpeechRecognition = () => {
+    if (audioStartRef.current.ended) {
+      audioEndRef.current.play();
+    }
+    stopSpeechRec();
+  };
   const downloadTranscript = useCallback(() => {
-    let blob = new Blob([transcript], { type: `text/plain` });
+    let blob = new Blob([transcript.split(`.`).join(`\n`)], {
+      type: `text/plain`,
+    });
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
   useEffect(() => {
     return () => URL.revokeObjectURL(linkRef.current?.href);
   }, []);
-  const addToTranscript = (string) => {
-    setTranscript((prevValue) => prevValue + string);
-  };
-  if (!browserSupport) {
+  if (browserSupport) {
     return (
-      <>
-        <h3>Your browser is not supported</h3>
-        <BrowserList />
-      </>
+      <p>
+        Your browser lacks support for the Web Speech Recognition service,
+        sorry.
+      </p>
     );
   }
   return (
     <section>
-      <button onClick={startSpeechRec}>Start listening</button>
+      <button onClick={playSpeechRec}>
+        {!listening ? `Start listening` : `listening ...`}
+      </button>
+      <button onClick={stopSpeechRecognition}>
+        Stop Speech Recognition service
+      </button>
       {!!transcript ? (
         <div>
+          <br />
           <div>
+            <p>{transcriptRef.current}</p>
             <textarea
-              style={{
-                width: `100%`,
-                resize: `vertical`,
-                fontWeight: 500,
-                fontSize: `1rem`,
-              }}
               value={transcript}
-              onChange={(ev) => setTranscript(ev.target.value)}
+              onChange={({ target: { value } }) => setTranscript(value)}
             ></textarea>
+            {noMatch && <p>Not very loud, let's hear it again ...</p>}
+            <p style={{ textAlign: `center` }}>
+              Your voice is being recorded in <b>{navigator.language}</b>
+            </p>
           </div>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a
