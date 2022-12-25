@@ -6,18 +6,23 @@ export function useSpeechRecognition() {
   const [speechErrMessage, setSpeechErrMessage] = useState(``);
   const [noMatch, setNoMatch] = useState(false);
   const [listening, setListening] = useState(false);
-  window.SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
-  const Recognition = new window.SpeechRecognition();
+
+  const Recognition =
+    new window.webkitSpeechRecognition() || new window.SpeechRecognition();
   const clickedRef = useRef(false);
+  // let { current: transcriptRef } = useRef(``);
   let transcriptRef = useRef(``);
   const startSpeechRec = () => {
+    // audioStart.play();
     // calling Recognition.start() more than once throws an error
-    if (!clickedRef.current) Recognition.start();
+    if (!clickedRef.current) {
+      Recognition.start();
+    }
     clickedRef.current = true;
   };
   const stopSpeechRec = () => {
     Recognition.stop();
+    clickedRef.current = false;
     setListening(false);
   };
   Recognition.onstart = () => setSpeechErrMessage(``);
@@ -53,7 +58,7 @@ export function useSpeechRecognition() {
     if (!(`SpeechRecognition` in window)) {
       setBrowserSupport(false);
     }
-  }, [setBrowserSupport]);
+  }, [browserSupport]);
   return {
     browserSupport,
     transcript,
@@ -64,5 +69,6 @@ export function useSpeechRecognition() {
     noMatch,
     listening,
     transcriptRef,
+    clickedRef,
   };
 }
