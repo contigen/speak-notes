@@ -1,3 +1,4 @@
+
 a {
   text-underline-offset: 4px;
 }
@@ -17,3 +18,12 @@ textarea:focus {
   outline: 1px solid #aaa;
   border: 1px solid #aaa
 }
+  @media screen and (min-width:760px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.2rem
+    }
+  }
