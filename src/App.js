@@ -4,7 +4,14 @@ import { SpeechRecognition } from "./features/speech-recognition/";
 
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    window.addEventListener(`online`, () => {
+      setIsOnline(true);
+    });
+    window.addEventListener(`offline`, () => {
+      setIsOnline(false);
+    });
+  }, []);
   return (
     <>
       <h1>Speak-notes: A Speech Recognition App</h1>
