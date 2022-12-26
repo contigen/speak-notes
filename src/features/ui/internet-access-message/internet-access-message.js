@@ -9,10 +9,6 @@ export const InternetAccessMessage = () => {
     window.addEventListener(`offline`, () => {
       setIsOnline(false);
     });
-    return () => {
-      window.removeEventListener();
-      window.removeEventListener();
-    };
   }, []);
   return (
     <>
