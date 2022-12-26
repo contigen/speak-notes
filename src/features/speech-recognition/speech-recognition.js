@@ -7,7 +7,7 @@ export const SpeechRecognition = () => {
   const {
     browserSupport,
     transcript,
-    setTranscript,
+    setTranscript: handleChange,
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
@@ -18,6 +18,7 @@ export const SpeechRecognition = () => {
   } = useSpeechRecognition();
 
   const linkRef = useRef();
+  // avoid recreating audio objects on every rerender: create once, use till the component is destroyed
   const audioStartRef = useRef(new Audio(firstAudioUrl));
   const audioEndRef = useRef(new Audio(secondAudioUrl));
 
@@ -28,7 +29,7 @@ export const SpeechRecognition = () => {
     startSpeechRec();
   };
   const stopSpeechRecognition = () => {
-    if (audioStartRef.current.ended) {
+    if (audioStartRef.current.ended && clickedRef.current) {
       audioEndRef.current.play();
     }
     stopSpeechRec();
@@ -42,7 +43,7 @@ export const SpeechRecognition = () => {
   useEffect(() => {
     return () => URL.revokeObjectURL(linkRef.current?.href);
   }, []);
-  if (browserSupport) {
+  if (!browserSupport) {
     return (
       <p>
         Your browser lacks support for the Web Speech Recognition service,
@@ -58,14 +59,14 @@ export const SpeechRecognition = () => {
       <button onClick={stopSpeechRecognition}>
         Stop Speech Recognition service
       </button>
-      {!!transcript ? (
+      {transcript ? (
         <div>
           <br />
           <div>
             <p>{transcriptRef.current}</p>
             <textarea
               value={transcript}
-              onChange={({ target: { value } }) => setTranscript(value)}
+              onChange={({ target: { value } }) => handleChange(value)}
             ></textarea>
             {noMatch && <p>Not very loud, let's hear it again ...</p>}
             <p style={{ textAlign: `center` }}>
