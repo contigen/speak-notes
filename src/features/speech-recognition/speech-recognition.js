@@ -1,7 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
 import { useSpeechRecognition } from "./use-speech-recognition";
-import firstAudioUrl from "../../sounds/audio-start.mp3";
-import secondAudioUrl from "../../sounds/audio-end.mp3";
 
 export const SpeechRecognition = () => {
   const {
@@ -11,29 +9,11 @@ export const SpeechRecognition = () => {
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
-    noMatch,
-    listening,
-    transcriptRef,
-    clickedRef,
+    speechRecVarsRef,
+    abort,
   } = useSpeechRecognition();
 
   const linkRef = useRef();
-  // avoid recreating audio objects on every rerender: create once, use till the component is destroyed
-  const audioStartRef = useRef(new Audio(firstAudioUrl));
-  const audioEndRef = useRef(new Audio(secondAudioUrl));
-
-  const playSpeechRec = () => {
-    if (!clickedRef.current) {
-      audioStartRef.current.play();
-    }
-    startSpeechRec();
-  };
-  const stopSpeechRecognition = () => {
-    if (audioStartRef.current.ended && clickedRef.current) {
-      audioEndRef.current.play();
-    }
-    stopSpeechRec();
-  };
   const downloadTranscript = useCallback(() => {
     let blob = new Blob([transcript.split(`.`).join(`\n`)], {
       type: `text/plain`,
@@ -53,22 +33,25 @@ export const SpeechRecognition = () => {
   }
   return (
     <section>
-      <button onClick={playSpeechRec}>
-        {!listening ? `Start listening` : `listening ...`}
+      <button onClick={startSpeechRec}>
+        {!speechRecVarsRef.current.listening
+          ? `Start listening`
+          : `listening ...`}
       </button>
-      <button onClick={stopSpeechRecognition}>
-        Stop Speech Recognition service
-      </button>
+      <button onClick={stopSpeechRec}>Pause speech recognition service</button>
+      <button onClick={abort}>Stop speech recognition service</button>
       {transcript ? (
         <div>
           <br />
           <div>
-            <p>{transcriptRef.current}</p>
+            <p>{speechRecVarsRef.current.transcript}</p>
             <textarea
               value={transcript}
               onChange={({ target: { value } }) => handleChange(value)}
             ></textarea>
-            {noMatch && <p>Not very loud, let's hear it again ...</p>}
+            {speechRecVarsRef.current.noMatch && (
+              <p>Not very loud, let's hear it again ...</p>
+            )}
             <p style={{ textAlign: `center` }}>
               Your voice is being recorded in <b>{navigator.language}</b>
             </p>
