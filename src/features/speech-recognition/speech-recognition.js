@@ -38,7 +38,6 @@ export const SpeechRecognition = () => {
           ? `Start listening`
           : `listening ...`}
       </button>
-      <button onClick={stopSpeechRec}>Pause speech recognition service</button>
       <button onClick={abort}>Stop speech recognition service</button>
       {transcript ? (
         <div>
