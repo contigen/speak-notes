@@ -9,7 +9,7 @@ export function useSpeechRecognition() {
 
   const Recognition =
     new window.webkitSpeechRecognition() || new window.SpeechRecognition();
-
+  Recognition.interimResults = true;
   const speechRecVarsRef = useRef({
     clicked: false,
     transcript: ``,
@@ -23,20 +23,24 @@ export function useSpeechRecognition() {
     if (!speechRecVarsRef.current.clicked) {
       Recognition.start();
       audioStart.play();
+      speechRecVarsRef.current.listening = true;
     }
     speechRecVarsRef.current.clicked = true;
   };
   const stopSpeechRec = () => {
-    audioStart.pause();
-    audioStart.currentTime = 0;
     if (speechRecVarsRef.current.clicked) {
+      audioStart.pause();
+      audioStart.currentTime = 0;
       audioEnd.play();
       Recognition.stop();
       speechRecVarsRef.current.listening = false;
     }
     speechRecVarsRef.current.clicked = false;
   };
-  const abort = () => Recognition.abort();
+  const abort = () => {
+    stopSpeechRec();
+    Recognition.abort();
+  };
   Recognition.onstart = () => {
     if (speechErrMessage) {
       setTimeout(() => setSpeechErrMessage(``), 1000);
@@ -59,15 +63,17 @@ export function useSpeechRecognition() {
     const speechRecResult = evt.results;
     [...speechRecResult].forEach((currentSpeechRes) => {
       speechRecVarsRef.current.transcript = currentSpeechRes[0].transcript;
-      newArr.push(currentSpeechRes[0].transcript);
+      if (currentSpeechRes.isFinal) {
+        newArr.push(currentSpeechRes[0].transcript);
+      }
     });
-    setTranscript((prev) => prev + ` ` + newArr.join());
+    setTranscript((prev) => prev + newArr.join());
   };
   Recognition.onend = () => {
     Recognition.start();
-  };
-  Recognition.onspeechend = () => {
-    Recognition.stop();
+    speechRecVarsRef.current.clicked = true;
+    // speechRecVarsRef.current.noMatch = false;
+    speechRecVarsRef.current.listening = true;
   };
   Recognition.onerror = (evt) => {
     setSpeechErrMessage(evt.error);
@@ -85,7 +91,6 @@ export function useSpeechRecognition() {
     setTranscript,
     speechErrMessage,
     startSpeechRec,
-    stopSpeechRec,
     speechRecVarsRef,
     abort,
   };
