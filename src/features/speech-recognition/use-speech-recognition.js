@@ -4,7 +4,10 @@ import secondAudioUrl from "../../sounds/audio-end.mp3";
 
 export function useSpeechRecognition() {
   const [browserSupport, setBrowserSupport] = useState(true);
-  const [transcript, setTranscript] = useState(``);
+  const [transcript, setTranscript] = useState({
+    preview: ``,
+    note: ``,
+  });
   const [speechErrMessage, setSpeechErrMessage] = useState(``);
 
   const Recognition =
@@ -12,7 +15,6 @@ export function useSpeechRecognition() {
   Recognition.interimResults = true;
   const speechRecVarsRef = useRef({
     clicked: false,
-    transcript: ``,
     noMatch: false,
     listening: false,
   });
@@ -41,11 +43,7 @@ export function useSpeechRecognition() {
     stopSpeechRec();
     Recognition.abort();
   };
-  Recognition.onstart = () => {
-    if (speechErrMessage) {
-      setTimeout(() => setSpeechErrMessage(``), 1000);
-    }
-  };
+  Recognition.onstart = () => {};
   Recognition.onaudiostart = () => {
     speechRecVarsRef.current.listening = true;
   };
@@ -59,15 +57,20 @@ export function useSpeechRecognition() {
     speechRecVarsRef.current.noMatch = true;
   };
   Recognition.onresult = (evt) => {
-    let newArr = [];
     const speechRecResult = evt.results;
     [...speechRecResult].forEach((currentSpeechRes) => {
-      speechRecVarsRef.current.transcript = currentSpeechRes[0].transcript;
+      setTranscript((prev) => {
+        return { ...prev, preview: currentSpeechRes[0].transcript };
+      });
       if (currentSpeechRes.isFinal) {
-        newArr.push(currentSpeechRes[0].transcript);
+        setTranscript((prev) => {
+          return {
+            ...prev,
+            note: prev.note + ` ` + currentSpeechRes[0].transcript,
+          };
+        });
       }
     });
-    setTranscript((prev) => prev + newArr.join());
   };
   Recognition.onend = () => {
     Recognition.start();
@@ -86,6 +89,7 @@ export function useSpeechRecognition() {
     }
   }, [browserSupport]);
   return {
+    Recognition,
     browserSupport,
     transcript,
     setTranscript,
