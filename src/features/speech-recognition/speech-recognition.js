@@ -3,12 +3,12 @@ import { useSpeechRecognition } from "./use-speech-recognition";
 
 export const SpeechRecognition = () => {
   const {
+    Recognition,
     browserSupport,
     transcript,
-    setTranscript: handleChange,
+    setTranscript,
     speechErrMessage,
     startSpeechRec,
-    stopSpeechRec,
     speechRecVarsRef,
     abort,
   } = useSpeechRecognition();
@@ -20,6 +20,11 @@ export const SpeechRecognition = () => {
     });
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
+  const handleChange = (value) => {
+    setTranscript((prev) => {
+      return { ...prev, note: value };
+    });
+  };
   useEffect(() => {
     return () => URL.revokeObjectURL(linkRef.current?.href);
   }, []);
@@ -39,20 +44,21 @@ export const SpeechRecognition = () => {
           : `listening ...`}
       </button>
       <button onClick={abort}>Stop speech recognition service</button>
-      {transcript ? (
+      <p>{transcript.preview}</p>
+      {transcript.note ? (
         <div>
           <br />
           <div>
-            <p>{speechRecVarsRef.current.transcript}</p>
             <textarea
-              value={transcript}
+              value={transcript.note}
               onChange={({ target: { value } }) => handleChange(value)}
             ></textarea>
             {speechRecVarsRef.current.noMatch && (
               <p>Not very loud, let's hear it again ...</p>
             )}
             <p style={{ textAlign: `center` }}>
-              Your voice is being recorded in <b>{navigator.language}</b>
+              Your voice is being recorded in{" "}
+              <b>{Recognition.lang || navigator.language}</b>
             </p>
           </div>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
