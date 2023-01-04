@@ -62,7 +62,7 @@ export function useSpeechRecognition() {
       setTranscript((prev) => {
         return { ...prev, preview: currentSpeechRes[0].transcript };
       });
-      // if recognised speech appears to be a completed one, then add it to the note.
+      // if recognised speech sounds like a complete sentence, then add it to the note.
       if (currentSpeechRes.isFinal) {
         setTranscript((prev) => {
           return {
@@ -90,7 +90,6 @@ export function useSpeechRecognition() {
     }
   }, [browserSupport]);
   return {
-    Recognition,
     browserSupport,
     transcript,
     setTranscript,
