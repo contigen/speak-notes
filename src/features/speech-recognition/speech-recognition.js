@@ -14,7 +14,7 @@ export const SpeechRecognition = () => {
 
   const linkRef = useRef();
   const downloadTranscript = useCallback(() => {
-    let blob = new Blob([transcript.split(`.`).join(`\n`)], {
+    const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
     });
     linkRef.current.href = URL.createObjectURL(blob);
