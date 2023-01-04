@@ -3,7 +3,6 @@ import { useSpeechRecognition } from "./use-speech-recognition";
 
 export const SpeechRecognition = () => {
   const {
-    Recognition,
     browserSupport,
     transcript,
     setTranscript,
@@ -57,8 +56,7 @@ export const SpeechRecognition = () => {
               <p>Not very loud, let's hear it again ...</p>
             )}
             <p style={{ textAlign: `center` }}>
-              Your voice is being recorded in{" "}
-              <b>{Recognition.lang || navigator.language}</b>
+              Your voice is being recorded in <b>{navigator.language}</b>
             </p>
           </div>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
