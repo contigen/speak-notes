@@ -17,6 +17,7 @@ export function useSpeechRecognition() {
     clicked: false,
     noMatch: false,
     listening: false,
+    stopped: false,
   });
   const audioStart = new Audio(firstAudioUrl);
   const audioEnd = new Audio(secondAudioUrl);
@@ -39,9 +40,9 @@ export function useSpeechRecognition() {
     }
     speechRecVarsRef.current.clicked = false;
   };
-  const abort = () => {
+  const abortSpeechRec = () => {
+    speechRecVarsRef.current.stopped = true;
     stopSpeechRec();
-    Recognition.abort();
   };
   Recognition.onstart = () => {};
   Recognition.onaudiostart = () => {
@@ -74,6 +75,7 @@ export function useSpeechRecognition() {
     });
   };
   Recognition.onend = () => {
+    if (speechRecVarsRef.current.stopped) return;
     Recognition.start();
     speechRecVarsRef.current.clicked = true;
     // speechRecVarsRef.current.noMatch = false;
@@ -96,6 +98,6 @@ export function useSpeechRecognition() {
     speechErrMessage,
     startSpeechRec,
     speechRecVarsRef,
-    abort,
+    abortSpeechRec,
   };
 }
