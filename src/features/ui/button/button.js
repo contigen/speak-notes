@@ -1,3 +1,5 @@
-export const Button = () => {
-  return <button></button>;
+import "./button.css";
+
+export const Button = ({ children, ...restProps }) => {
+  return <button {...restProps}>{children}</button>;
 };
