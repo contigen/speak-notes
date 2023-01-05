@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
 import { useSpeechRecognition } from "./use-speech-recognition";
+import { Button } from "../ui/button";
 
 export const SpeechRecognition = () => {
   const {
@@ -37,12 +38,12 @@ export const SpeechRecognition = () => {
   }
   return (
     <section>
-      <button onClick={startSpeechRec}>
-        {!speechRecVarsRef.current.listening
-          ? `Start listening`
-          : `listening ...`}
-      </button>
-      <button onClick={abortSpeechRec}>Stop speech recognition service</button>
+      <Button onClick={startSpeechRec}>
+        {speechRecVarsRef.current.listening
+          ? `Listening ...`
+          : `Start listening`}
+      </Button>
+      <Button onClick={abortSpeechRec}>Stop speech recognition service</Button>
       <p>{transcript.preview}</p>
       {transcript.note ? (
         <div>
