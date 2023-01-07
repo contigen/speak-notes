@@ -6,8 +6,10 @@ button {
     padding: .2rem 1rem;
 }
 
-button:hover {
-    opacity: .65;
+@media (hover: hover) {
+    button:hover {
+        opacity: .65;
+    }
 }
 
 button:active {
