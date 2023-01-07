@@ -26,7 +26,12 @@ export const SpeechRecognition = () => {
     });
   };
   useEffect(() => {
-    return () => URL.revokeObjectURL(linkRef.current?.href);
+    const linkElement = linkRef.current;
+    return () => {
+      if (linkElement?.getAttribute(`href`) !== `#`) {
+        URL.revokeObjectURL(linkElement?.href);
+      }
+    };
   }, []);
   if (!browserSupport) {
     return (
