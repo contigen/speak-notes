@@ -10,7 +10,7 @@ export const SpeechRecognition = () => {
     speechErrMessage,
     startSpeechRec,
     speechRecVarsRef,
-    abortSpeechRec,
+    stopSpeechRec,
   } = useSpeechRecognition();
 
   const linkRef = useRef();
@@ -48,7 +48,7 @@ export const SpeechRecognition = () => {
           ? `Listening ...`
           : `Start listening`}
       </Button>
-      <Button onClick={abortSpeechRec}>Stop speech recognition service</Button>
+      <Button onClick={stopSpeechRec}>Stop speech recognition service</Button>
       <p>{transcript.preview}</p>
       {transcript.note ? (
         <div>
