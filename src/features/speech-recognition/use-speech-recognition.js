@@ -2,6 +2,9 @@ import { useLayoutEffect, useState, useRef } from "react";
 import firstAudioUrl from "../../sounds/audio-start.mp3";
 import secondAudioUrl from "../../sounds/audio-end.mp3";
 
+const audioStart = new Audio(firstAudioUrl);
+const audioEnd = new Audio(secondAudioUrl);
+
 export function useSpeechRecognition() {
   const [browserSupport, setBrowserSupport] = useState(true);
   const [transcript, setTranscript] = useState({
@@ -19,16 +22,15 @@ export function useSpeechRecognition() {
     listening: false,
     stopped: false,
   });
-  const audioStart = new Audio(firstAudioUrl);
-  const audioEnd = new Audio(secondAudioUrl);
   const startSpeechRec = () => {
     // calling Recognition.start() more than once throws an error
     if (!speechRecVarsRef.current.clicked) {
       Recognition.start();
       audioStart.play();
       speechRecVarsRef.current.listening = true;
+      speechRecVarsRef.current.clicked = true;
+      speechRecVarsRef.current.stopped = false;
     }
-    speechRecVarsRef.current.clicked = true;
   };
   const stopSpeechRec = () => {
     if (speechRecVarsRef.current.clicked) {
@@ -37,22 +39,15 @@ export function useSpeechRecognition() {
       audioEnd.play();
       Recognition.stop();
       speechRecVarsRef.current.listening = false;
+      speechRecVarsRef.current.clicked = false;
+      speechRecVarsRef.current.stopped = true;
     }
-    speechRecVarsRef.current.clicked = false;
   };
-  const abortSpeechRec = () => {
-    speechRecVarsRef.current.stopped = true;
-    stopSpeechRec();
-  };
-  Recognition.onstart = () => {};
   Recognition.onaudiostart = () => {
     speechRecVarsRef.current.listening = true;
   };
   Recognition.onaudioend = () => {
     speechRecVarsRef.current.listening = false;
-  };
-  Recognition.onsoundstart = (ev) => {
-    // setNomatch()
   };
   Recognition.onnomatch = () => {
     speechRecVarsRef.current.noMatch = true;
@@ -76,9 +71,9 @@ export function useSpeechRecognition() {
   };
   Recognition.onend = () => {
     if (speechRecVarsRef.current.stopped) return;
+    // to make the Web Speech API listen continuously
     Recognition.start();
     speechRecVarsRef.current.clicked = true;
-    // speechRecVarsRef.current.noMatch = false;
     speechRecVarsRef.current.listening = true;
   };
   Recognition.onerror = (evt) => {
@@ -98,6 +93,6 @@ export function useSpeechRecognition() {
     speechErrMessage,
     startSpeechRec,
     speechRecVarsRef,
-    abortSpeechRec,
+    stopSpeechRec,
   };
 }
