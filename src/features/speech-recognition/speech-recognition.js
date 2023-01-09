@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
 import { useSpeechRecognition } from "./use-speech-recognition";
 import { Button } from "../ui/button";
-
+import { TextArea } from "../ui/textarea";
 export const SpeechRecognition = () => {
   const {
     browserSupport,
@@ -54,10 +54,10 @@ export const SpeechRecognition = () => {
         <div>
           <br />
           <div>
-            <textarea
+            <TextArea
               value={transcript.note}
               onChange={({ target: { value } }) => handleChange(value)}
-            ></textarea>
+            ></TextArea>
             {speechRecVarsRef.current.noMatch && (
               <p>Not very loud, let's hear it again ...</p>
             )}

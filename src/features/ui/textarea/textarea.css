@@ -1,0 +1,15 @@
+textarea {
+    padding: 10px;
+    line-height: 1.5;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 1px #999;
+    font-size: 1rem;
+    width: 100%;
+    resize: none;
+}
+
+textarea:focus {
+    outline: 1px solid #aaa;
+    border: 1px solid #aaa
+}
