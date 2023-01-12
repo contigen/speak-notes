@@ -1,8 +1,7 @@
 # Speak-Notes
 
-A voice-note taking app using the JavaScript Web Speech API; the app transcribes recognised speech into text and shows the result in a preview format and a note format, with real-time edit - the highlight of the app. The preview shows the transcribed speech simultaneously as speech is being recognised, and the note form displays recognised speech which sound complete, as in a complete sentence. There are sounds played when the speech recognition service is started and stopped, as a cue to users. The app listens in the language provided by the user agent. It allows to download the transcript as a text file.
+A voice-note taking app using the JavaScript Web Speech API; the app transcribes recognised speech into text and shows the result in a preview format and, a note format with real-time edit - the highlight of the app. The preview shows the transcribed speech simultaneously as speech is being recognised, and the note form displays recognised speech which sound complete, as in a complete sentence. There are sounds played when the speech recognition service is started and stopped, as a cue to users. The app listens in the language provided by the user agent. It allows to download the transcript as a text file.
 
-Use a modern browser, apparently.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
