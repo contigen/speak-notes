@@ -44,9 +44,7 @@ export const SpeechRecognition = () => {
   return (
     <section>
       <Button onClick={startSpeechRec}>
-        {speechRecVarsRef.current.listening
-          ? `Listening ...`
-          : `Start listening`}
+        {transcript.listening ? `Listening ...` : `Start listening`}
       </Button>
       <Button onClick={stopSpeechRec}>Stop speech recognition service</Button>
       <p>{transcript.preview}</p>
