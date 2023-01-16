@@ -74,7 +74,8 @@ export const SpeechRecognition = () => {
           </a>
         </div>
       ) : (
-        speechErrMessage && (
+        speechErrMessage &&
+        !transcript.preview && (
           <h3>Error occurred in recognising speech: {speechErrMessage}</h3>
         )
       )}
