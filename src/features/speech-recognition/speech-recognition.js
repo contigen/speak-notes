@@ -9,7 +9,6 @@ export const SpeechRecognition = () => {
     setTranscript,
     speechErrMessage,
     startSpeechRec,
-    speechRecVarsRef,
     stopSpeechRec,
   } = useSpeechRecognition();
 
@@ -25,6 +24,7 @@ export const SpeechRecognition = () => {
       return { ...prev, note: value };
     });
   };
+
   useEffect(() => {
     const linkElement = linkRef.current;
     return () => {
@@ -43,6 +43,11 @@ export const SpeechRecognition = () => {
   }
   return (
     <section>
+      {!transcript.listening && (
+        <Button>
+          <b>{navigator.language}</b>
+        </Button>
+      )}
       <Button onClick={startSpeechRec}>
         {transcript.listening ? `Listening ...` : `Start listening`}
       </Button>
@@ -55,13 +60,10 @@ export const SpeechRecognition = () => {
             <TextArea
               value={transcript.note}
               onChange={({ target: { value } }) => handleChange(value)}
-            ></TextArea>
-            {speechRecVarsRef.current.noMatch && (
+            />
+            {transcript.noMatch && (
               <p>Not very loud, let's hear it again ...</p>
             )}
-            <p style={{ textAlign: `center` }}>
-              Listening to your voice in <b>{navigator.language}</b>
-            </p>
           </div>
           {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a
@@ -78,6 +80,11 @@ export const SpeechRecognition = () => {
         !transcript.preview && (
           <h3>Error occurred in recognising speech: {speechErrMessage}</h3>
         )
+      )}
+      {(transcript.listening || transcript.preview) && (
+        <p style={{ textAlign: `center` }}>
+          Listening to your voice in <b>{navigator.language}</b>
+        </p>
       )}
     </section>
   );
