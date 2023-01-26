@@ -81,7 +81,7 @@ export const SpeechRecognition = () => {
           <h3>Error occurred in recognising speech: {speechErrMessage}</h3>
         )
       )}
-      {(transcript.listening || transcript.preview) && (
+      {transcript.listening && (
         <p style={{ textAlign: `center` }}>
           Listening to your voice in <b>{navigator.language}</b>
         </p>
