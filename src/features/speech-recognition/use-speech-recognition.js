@@ -11,6 +11,7 @@ export function useSpeechRecognition() {
     preview: ``,
     note: ``,
     listening: false,
+    noMatch: false,
   });
   const [speechErrMessage, setSpeechErrMessage] = useState(``);
   const updateListening = (value) => {
@@ -22,7 +23,6 @@ export function useSpeechRecognition() {
   Recognition.interimResults = true;
   const speechRecVarsRef = useRef({
     clicked: false,
-    noMatch: false,
     stopped: false,
   });
   const startSpeechRec = () => {
@@ -53,7 +53,10 @@ export function useSpeechRecognition() {
     updateListening(false);
   };
   Recognition.onnomatch = () => {
-    speechRecVarsRef.current.noMatch = true;
+    setTranscript((prev) => ({
+      ...prev,
+      noMatch: true,
+    }));
   };
   Recognition.onresult = (evt) => {
     const speechRecResult = evt.results;
@@ -95,7 +98,6 @@ export function useSpeechRecognition() {
     setTranscript,
     speechErrMessage,
     startSpeechRec,
-    speechRecVarsRef,
     stopSpeechRec,
   };
 }
