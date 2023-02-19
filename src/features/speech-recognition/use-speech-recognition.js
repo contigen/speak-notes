@@ -59,6 +59,10 @@ export function useSpeechRecognition() {
     }));
   };
   Recognition.onresult = (evt) => {
+    setTranscript((prev) => ({
+      ...prev,
+      noMatch: false,
+    }));
     const speechRecResult = evt.results;
     [...speechRecResult].forEach((currentSpeechRes) => {
       setTranscript((prev) => {
