@@ -14,8 +14,9 @@ export function useSpeechRecognition() {
     noMatch: false,
   });
   const [speechErrMessage, setSpeechErrMessage] = useState(``);
-  const updateListening = (value) => {
-    setTranscript((prev) => ({ ...prev, listening: value }));
+
+  const updateStateConfig = (stateValue) => {
+    setTranscript((prev) => ({ ...prev, ...stateValue }));
   };
 
   const Recognition =
@@ -25,12 +26,13 @@ export function useSpeechRecognition() {
     clicked: false,
     stopped: false,
   });
+
   const startSpeechRec = () => {
     // calling Recognition.start() more than once throws an error
     if (!speechRecVarsRef.current.clicked) {
       Recognition.start();
       audioStart.play();
-      updateListening(true);
+      updateStateConfig({ listening: true });
       speechRecVarsRef.current.clicked = true;
       speechRecVarsRef.current.stopped = false;
     }
@@ -41,28 +43,22 @@ export function useSpeechRecognition() {
       audioStart.currentTime = 0;
       audioEnd.play();
       Recognition.stop();
-      updateListening(false);
+      updateStateConfig({ listening: false });
       speechRecVarsRef.current.clicked = false;
       speechRecVarsRef.current.stopped = true;
     }
   };
   Recognition.onaudiostart = () => {
-    updateListening(true);
+    updateStateConfig({ listening: true });
   };
   Recognition.onaudioend = () => {
-    updateListening(false);
+    updateStateConfig({ listening: false });
   };
   Recognition.onnomatch = () => {
-    setTranscript((prev) => ({
-      ...prev,
-      noMatch: true,
-    }));
+    updateStateConfig({ noMatch: true });
   };
   Recognition.onresult = (evt) => {
-    setTranscript((prev) => ({
-      ...prev,
-      noMatch: false,
-    }));
+    updateStateConfig({ noMatch: false });
     const speechRecResult = evt.results;
     [...speechRecResult].forEach((currentSpeechRes) => {
       setTranscript((prev) => {
@@ -84,7 +80,7 @@ export function useSpeechRecognition() {
     // to make the Web Speech API listen continuously
     Recognition.start();
     speechRecVarsRef.current.clicked = true;
-    updateListening(true);
+    updateStateConfig({ listening: true });
   };
   Recognition.onerror = (evt) => {
     setSpeechErrMessage(evt.error);
