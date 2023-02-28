@@ -9,7 +9,7 @@ function App() {
   }
   return (
     <>
-      <HomepageMessage />
+      <HomepageMessage browserSupport/>
       <SpeechRecognition />
       <InternetAccessMessage />
     </>
