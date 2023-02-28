@@ -1,15 +1,15 @@
 import "./App.css";
 import { SpeechRecognition } from "./features/speech-recognition/";
 import { InternetAccessMessage } from "./features/ui";
+import { HomepageMessage } from "./features/ui/homepage-message/homepage-message";
+
 function App() {
+  if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
+    return <HomepageMessage browserSupport={false} />;
+  }
   return (
     <>
-      <h1>Speak-notes: A Speech Recognition App</h1>
-      <p>
-        The App accesses your microphone, if you permit apparently. <b>*</b>No
-        user data stored.
-      </p>
-      <h3>Speak • Transcribe - edit transcript • Download transcript.</h3>
+      <HomepageMessage />
       <SpeechRecognition />
       <InternetAccessMessage />
     </>
