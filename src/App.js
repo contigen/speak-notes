@@ -1,7 +1,7 @@
 import "./App.css";
 import { SpeechRecognition } from "./features/speech-recognition/";
 import { InternetAccessMessage } from "./features/ui";
-import { HomepageMessage } from "./features/ui/homepage-message/homepage-message";
+import { HomepageMessage } from "./features/ui/";
 
 function App() {
   if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
