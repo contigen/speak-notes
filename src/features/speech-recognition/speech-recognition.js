@@ -4,7 +4,6 @@ import { Button } from "../ui/button";
 import { TextArea } from "../ui/textarea";
 export const SpeechRecognition = () => {
   const {
-    browserSupport,
     transcript,
     setTranscript,
     speechErrMessage,
@@ -33,14 +32,7 @@ export const SpeechRecognition = () => {
       }
     };
   }, []);
-  if (!browserSupport) {
-    return (
-      <p>
-        Your browser lacks support for the Web Speech Recognition service,
-        sorry.
-      </p>
-    );
-  }
+
   return (
     <section>
       {!transcript.listening && (

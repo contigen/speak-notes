@@ -6,7 +6,6 @@ const audioStart = new Audio(firstAudioUrl);
 const audioEnd = new Audio(secondAudioUrl);
 
 export function useSpeechRecognition() {
-  const [browserSupport, setBrowserSupport] = useState(true);
   const [transcript, setTranscript] = useState({
     preview: ``,
     note: ``,
@@ -85,15 +84,10 @@ export function useSpeechRecognition() {
   Recognition.onerror = (evt) => {
     setSpeechErrMessage(evt.error);
   };
-  useLayoutEffect(() => {
-    if (
-      !(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)
-    ) {
-      setBrowserSupport(false);
-    }
-  }, [browserSupport]);
+  // if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
+  //   setBrowserSupport(false);
+  // }
   return {
-    browserSupport,
     transcript,
     setTranscript,
     speechErrMessage,
