@@ -2,7 +2,7 @@ import "./App.css";
 import { SpeechRecognition } from "./features/speech-recognition/";
 import { InternetAccessMessage } from "./features/ui";
 import { HomepageMessage } from "./features/ui/";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 function App() {
   async function getMedia(constraints) {
@@ -32,9 +32,23 @@ function App() {
       })
       .catch((err) => console.log(err.name, err.message));
   }
-
+  const ref = useRef();
   useEffect(() => {
     getMedia({ audio: true });
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) => {
+        devices.forEach((device) => {
+          useRef.current = (
+            <span>
+              (`${device.kind}: ${device.label} id = ${device.deviceId}`)
+            </span>
+          );
+        });
+      })
+      .catch((err) => {
+        console.error(`${err.name}: ${err.message}`);
+      });
   });
 
   if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
@@ -47,6 +61,7 @@ function App() {
       <InternetAccessMessage />
       <audio id="video" controls></audio>
       <video id="video" controls></video>
+      <button>{useRef.current ?? `no value`}</button>
     </>
   );
 }
