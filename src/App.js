@@ -2,7 +2,7 @@ import "./App.css";
 import { SpeechRecognition } from "./features/speech-recognition/";
 import { InternetAccessMessage } from "./features/ui";
 import { HomepageMessage } from "./features/ui/";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef,useState } from "react";
 
 function App() {
   async function getMedia(constraints) {
@@ -32,18 +32,18 @@ function App() {
       })
       .catch((err) => console.log(err.name, err.message));
   }
-  const ref = useRef();
+  const [val,setVal] = useState({current:null});
   useEffect(() => {
     getMedia({ audio: true });
     navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {
         devices.forEach((device) => {
-          useRef.current = (
-            <span>
+          setVal((
+            {current:<span>
               (`${device.kind}: ${device.label} id = ${device.deviceId}`)
-            </span>
-          );
+            </span>}
+          ))
         });
       })
       .catch((err) => {
@@ -61,7 +61,7 @@ function App() {
       <InternetAccessMessage />
       <audio id="video" controls></audio>
       <video id="video" controls></video>
-      <button>{ref.current ?? `no value`}</button>
+      <button>{val.current ?? `no value`}</button>
     </>
   );
 }
