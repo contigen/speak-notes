@@ -61,7 +61,7 @@ function App() {
       <InternetAccessMessage />
       <audio id="video" controls></audio>
       <video id="video" controls></video>
-      <button>{useRef.current ?? `no value`}</button>
+      <button>{ref.current ?? `no value`}</button>
     </>
   );
 }
