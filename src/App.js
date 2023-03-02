@@ -6,6 +6,8 @@ import { useEffect } from "react";
 
 function App() {
   async function getMedia(constraints) {
+    if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window))
+      return;
     let stream = null;
     try {
       stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -14,17 +16,23 @@ function App() {
     }
     return stream;
   }
-  navigator.mediaDevices
-    .getUserMedia({
-      audio: true,
-      video: { facingMode: `user` },
-    })
-    .then((mediaStream) => {
-      const audio = document.querySelector(`audio`);
-      audio.srcObject = mediaStream;
-      audio.onloadedmetadata = () => audio.play();
-    })
-    .catch((err) => console.log(err.name, err.message));
+  if (`webkitSpeechRecognition` in window || `SpeechRecognition` in window) {
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+        video: { facingMode: `user` },
+      })
+      .then((mediaStream) => {
+        const audio = document.querySelector(`audio`);
+        const video = document.querySelector(`video`);
+        audio.srcObject = mediaStream;
+        video.srcObject = mediaStream;
+        // audio.onloadedmetadata = () => audio.play();
+        video.onloadedmetadata = () => video.play();
+      })
+      .catch((err) => console.log(err.name, err.message));
+  }
+
   useEffect(() => {
     getMedia({ audio: true });
   });
@@ -38,6 +46,7 @@ function App() {
       <SpeechRecognition />
       <InternetAccessMessage />
       <audio id="video" controls></audio>
+      <video id="video" controls></video>
     </>
   );
 }
