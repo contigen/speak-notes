@@ -84,9 +84,6 @@ export function useSpeechRecognition() {
   Recognition.onerror = (evt) => {
     setSpeechErrMessage(evt.error);
   };
-  // if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
-  //   setBrowserSupport(false);
-  // }
   return {
     transcript,
     setTranscript,
