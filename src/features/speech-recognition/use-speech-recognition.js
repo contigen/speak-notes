@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import firstAudioUrl from "../../sounds/audio-start.mp3";
 import secondAudioUrl from "../../sounds/audio-end.mp3";
 
