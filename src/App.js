@@ -12,6 +12,23 @@ function App() {
       <HomepageMessage browserSupport />
       <SpeechRecognition />
       <InternetAccessMessage />
+      <pre>copy functionality</pre>
+      <pre>add and delete notes</pre>
+      <code>Add tags to notes</code>
+      <pre>Sort notes based on tags and create time</pre>
+      <code>Focus and blur into notes activates and stops listening</code>
+      <pre>Create tags, and reference it in own notes</pre>
+      <pre>A folder of same tag notes</pre>
+      <h3>Heading of notes with option to select tag</h3>
+      <code>Search all notes functionality</code>
+      <hr />
+      <kbd>
+        Keyboard shortcuts to control specific functionalities: open tags menu,
+        copy notes: bolden and italicise text
+      </kbd>
+      <p>
+        <small>Voice commands</small>
+      </p>
     </>
   );
 }

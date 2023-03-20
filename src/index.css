@@ -7,3 +7,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+pre {
+  font-family: initial;
+  font-style: italic;
+}
+
+code {
+  font-family: monospace
+}
+
+kbd {
+  font-family: initial
+}
