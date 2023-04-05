@@ -47,6 +47,8 @@ export function useSpeechRecognition() {
       speechRecVarsRef.current.stopped = true;
     }
   };
+  const abortSpeechRec = () => Recognition.stop();
+
   Recognition.onaudiostart = () => {
     updateStateConfig({ listening: true });
   };
@@ -90,5 +92,6 @@ export function useSpeechRecognition() {
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
+    abortSpeechRec,
   };
 }
