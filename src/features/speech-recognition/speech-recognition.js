@@ -9,6 +9,7 @@ export const SpeechRecognition = () => {
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
+    abortSpeechRec,
   } = useSpeechRecognition();
 
   const linkRef = useRef();
@@ -34,7 +35,7 @@ export const SpeechRecognition = () => {
   }, []);
 
   return (
-    <section>
+    <section onBlur={stopSpeechRec}>
       {!transcript.listening && (
         <Button>
           <b>{navigator.language}</b>
