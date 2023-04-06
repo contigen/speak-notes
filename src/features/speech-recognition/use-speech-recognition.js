@@ -43,6 +43,7 @@ export function useSpeechRecognition() {
       audioEnd.play();
       Recognition.stop();
       updateStateConfig({ listening: false });
+      setSpeechErrMessage();
       speechRecVarsRef.current.clicked = false;
       speechRecVarsRef.current.stopped = true;
     }
