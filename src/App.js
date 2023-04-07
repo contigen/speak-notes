@@ -3,9 +3,11 @@ import "./App.css";
 import { SpeechRecognition } from "./features/speech-recognition/";
 import { InternetAccessMessage } from "./features/ui";
 import { HomepageMessage } from "./features/ui/";
+import { WaveformAudioRecorder } from "waveform-audio-recorder";
 
 function App() {
   const [noteCount, setNoteCount] = useState([1]);
+  const [recorderState, setRecorderState] = useState(null);
   if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
     return <HomepageMessage browserSupport={false} />;
   }
@@ -13,7 +15,6 @@ function App() {
     setNoteCount((prev) => [...prev, 1]);
   };
   const deleteSpeakNote = () => {
-    // const newArr = noteCount;
     if (noteCount.length === 1) return;
     setNoteCount((prev) => [...prev.slice(0, -1)]);
   };
@@ -27,10 +28,8 @@ function App() {
       ))}
       <InternetAccessMessage />
       <pre>copy functionality</pre>
-      <pre>add and delete notes</pre>
       <code>Add tags to notes</code>
       <pre>Sort notes based on tags and create time</pre>
-      <code>Focus and blur into notes activates and stops listening</code>
       <pre>Create tags, and reference it in own notes</pre>
       <pre>A folder of same tag notes</pre>
       <h3>Heading of notes with option to select tag</h3>
@@ -43,6 +42,21 @@ function App() {
       <p>
         <small>Voice commands</small>
       </p>
+      <div>
+        <button
+          onClick={
+            recorderState?.initRecording
+              ? recorderState?.saveRecording
+              : recorderState?.startRecording
+          }
+        >
+          {recorderState?.initRecording ? "Stop" : "Start"}
+        </button>
+
+        <WaveformAudioRecorder setRecorderState={setRecorderState} />
+
+        {recorderState?.recordingDuration}
+      </div>
     </>
   );
 }
