@@ -16,7 +16,7 @@ function App() {
   };
   const deleteSpeakNote = () => {
     if (noteCount.length === 1) return;
-    setNoteCount((prev) => [...prev.slice(0, -1)]);
+    setNoteCount((prev) => prev.slice(0, -1));
   };
   return (
     <>
