@@ -92,7 +92,7 @@ export function useSpeechRecognition() {
     updateStateConfig({ listening: true });
   };
   Recognition.onerror = (evt) => {
-    setSpeechErrMessage(evt.error);
+    !speechRecVarsRef.current.stopped && setSpeechErrMessage(evt.error);
   };
   return {
     transcript,
