@@ -48,15 +48,6 @@ export function useSpeechRecognition() {
       speechRecVarsRef.current.stopped = true;
     }
   };
-  const abortSpeechRec = () => {
-    if (!speechRecVarsRef.current.clicked) return;
-    Recognition.stop();
-    updateStateConfig({ listening: false });
-    setSpeechErrMessage(``);
-    speechRecVarsRef.current.clicked = false;
-    speechRecVarsRef.current.stopped = true;
-  };
-
   Recognition.onaudiostart = () => {
     updateStateConfig({ listening: true });
   };
@@ -100,6 +91,5 @@ export function useSpeechRecognition() {
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
-    abortSpeechRec,
   };
 }
