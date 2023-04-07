@@ -36,19 +36,26 @@ export function useSpeechRecognition() {
       speechRecVarsRef.current.stopped = false;
     }
   };
-  const stopSpeechRec = () => {
+  const stopSpeechRec = (blurStopped) => {
     if (speechRecVarsRef.current.clicked) {
       audioStart.pause();
       audioStart.currentTime = 0;
-      audioEnd.play();
+      blurStopped && audioEnd.play();
       Recognition.stop();
       updateStateConfig({ listening: false });
-      setSpeechErrMessage();
+      setSpeechErrMessage(``);
       speechRecVarsRef.current.clicked = false;
       speechRecVarsRef.current.stopped = true;
     }
   };
-  const abortSpeechRec = () => Recognition.stop();
+  const abortSpeechRec = () => {
+    if (!speechRecVarsRef.current.clicked) return;
+    Recognition.stop();
+    updateStateConfig({ listening: false });
+    setSpeechErrMessage(``);
+    speechRecVarsRef.current.clicked = false;
+    speechRecVarsRef.current.stopped = true;
+  };
 
   Recognition.onaudiostart = () => {
     updateStateConfig({ listening: true });
