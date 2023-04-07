@@ -23,7 +23,7 @@ export const SpeechRecognition = () => {
       return { ...prev, note: value };
     });
   };
-  const handleFocus = ({ bubbles, currentTarget, relatedTarget, target }) => {
+  const handleFocus = ({ currentTarget, relatedTarget, target }) => {
     if (!currentTarget.contains(relatedTarget)) {
       target.click();
     }
