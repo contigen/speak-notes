@@ -9,11 +9,9 @@ export const SpeechRecognition = () => {
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
-    abortSpeechRec,
   } = useSpeechRecognition();
 
   const linkRef = useRef();
-  const ref = useRef();
   const downloadTranscript = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
@@ -25,23 +23,19 @@ export const SpeechRecognition = () => {
       return { ...prev, note: value };
     });
   };
-  const focusHandler = (evt) => {
-    if (!evt.currentTarget.contains(evt.relatedTarget)) {
+  const handleFocus = ({ currentTarget, relatedTarget }) => {
+    if (!currentTarget.contains(relatedTarget)) {
       console.log(`focused`);
     }
   };
-  const blurHandler = (evt) => {
-    if (!evt.currentTarget.contains(evt.relatedTarget)) {
+  const handleBlur = ({ currentTarget, relatedTarget }) => {
+    if (!currentTarget.contains(relatedTarget)) {
       console.log(`blurred`);
     }
   };
   useEffect(() => {
-    const sectionElement = ref.current;
-    sectionElement.addEventListener(`focusout`, blurHandler);
     const linkElement = linkRef.current;
     return () => {
-      sectionElement.removeEventListener(`focusout`, blurHandler);
-
       if (linkElement?.getAttribute(`href`) !== `#`) {
         URL.revokeObjectURL(linkElement?.href);
       }
@@ -49,7 +43,7 @@ export const SpeechRecognition = () => {
   }, []);
 
   return (
-    <section onFocus={focusHandler} onBlur={blurHandler} ref={ref}>
+    <section onFocus={handleFocus} onBlur={handleBlur}>
       {!transcript.listening && (
         <Button>
           <b>{navigator.language}</b>
