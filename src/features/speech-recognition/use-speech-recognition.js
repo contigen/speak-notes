@@ -36,11 +36,11 @@ export function useSpeechRecognition() {
       speechRecVarsRef.current.stopped = false;
     }
   };
-  const stopSpeechRec = (blurStopped) => {
+  const stopSpeechRec = (_, isBlurred) => {
     if (speechRecVarsRef.current.clicked) {
       audioStart.pause();
       audioStart.currentTime = 0;
-      blurStopped && audioEnd.play();
+      !isBlurred && audioEnd.play();
       Recognition.stop();
       updateStateConfig({ listening: false });
       setSpeechErrMessage(``);
