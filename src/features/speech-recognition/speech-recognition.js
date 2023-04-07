@@ -23,14 +23,14 @@ export const SpeechRecognition = () => {
       return { ...prev, note: value };
     });
   };
-  const handleFocus = ({ currentTarget, relatedTarget }) => {
+  const handleFocus = ({ bubbles, currentTarget, relatedTarget, target }) => {
     if (!currentTarget.contains(relatedTarget)) {
-      console.log(`focused`);
+      target.click();
     }
   };
   const handleBlur = ({ currentTarget, relatedTarget }) => {
     if (!currentTarget.contains(relatedTarget)) {
-      console.log(`blurred`);
+      stopSpeechRec(null, true);
     }
   };
   useEffect(() => {
