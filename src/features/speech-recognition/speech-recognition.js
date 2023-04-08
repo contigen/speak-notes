@@ -24,11 +24,13 @@ export const SpeechRecognition = () => {
     });
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
+    // avoid focus event triggering more than once
     if (!currentTarget.contains(relatedTarget)) {
       target.click();
     }
   };
   const handleBlur = ({ currentTarget, relatedTarget }) => {
+    // avoid blur event triggering more than once
     if (!currentTarget.contains(relatedTarget)) {
       stopSpeechRec(null, true);
     }
