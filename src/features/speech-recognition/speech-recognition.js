@@ -24,8 +24,7 @@ export const SpeechRecognition = () => {
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
     // avoid focus event triggering more than once within the same element
     if (!currentTarget.contains(relatedTarget)) {
-      // focusRef.current = true;
-      // click event doesn't work simultaneously with blur, use focus event with .click()
+      // before blur event trigger of the active element, clicking a separate element triggers only blur event, the click event isn't triggered, use focus event with .click() to run the click event's handler simultaneously
       target.click();
     }
   };
