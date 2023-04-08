@@ -3,11 +3,9 @@ import "./App.css";
 import { SpeechRecognition } from "./features/speech-recognition/";
 import { InternetAccessMessage } from "./features/ui";
 import { HomepageMessage } from "./features/ui/";
-import { WaveformAudioRecorder } from "waveform-audio-recorder";
 
 function App() {
   const [noteCount, setNoteCount] = useState([1]);
-  const [recorderState, setRecorderState] = useState(null);
   if (!(`webkitSpeechRecognition` in window || `SpeechRecognition` in window)) {
     return <HomepageMessage browserSupport={false} />;
   }
@@ -42,21 +40,6 @@ function App() {
       <p>
         <small>Voice commands</small>
       </p>
-      <div>
-        <button
-          onClick={
-            recorderState?.initRecording
-              ? recorderState?.saveRecording
-              : recorderState?.startRecording
-          }
-        >
-          {recorderState?.initRecording ? "Stop" : "Start"}
-        </button>
-
-        <WaveformAudioRecorder setRecorderState={setRecorderState} />
-
-        {recorderState?.recordingDuration}
-      </div>
     </>
   );
 }
