@@ -19,9 +19,7 @@ export const SpeechRecognition = () => {
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
   const handleChange = (value) => {
-    setTranscript((prev) => {
-      return { ...prev, note: value };
-    });
+    setTranscript((prev) => ({ ...prev, note: value }));
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
     // avoid focus event triggering more than once
