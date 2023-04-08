@@ -22,15 +22,17 @@ export const SpeechRecognition = () => {
     setTranscript((prev) => ({ ...prev, note: value }));
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
-    // avoid focus event triggering more than once
+    // avoid focus event triggering more than once within the same element
     if (!currentTarget.contains(relatedTarget)) {
+      // focusRef.current = true;
+      // click event doesn't work simultaneously with blur, use focus event with .click()
       target.click();
     }
   };
   const handleBlur = ({ currentTarget, relatedTarget }) => {
-    // avoid blur event triggering more than once
+    // avoid blur event triggering more than once within the same element
     if (!currentTarget.contains(relatedTarget)) {
-      stopSpeechRec(null, true);
+      stopSpeechRec(null, false);
     }
   };
   useEffect(() => {
