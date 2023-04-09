@@ -28,10 +28,17 @@ export const SpeechRecognition = () => {
       target.click();
     }
   };
-  const handleBlur = ({ currentTarget, relatedTarget }) => {
+  const handleBlur = ({ currentTarget, relatedTarget, target }) => {
     // avoid blur event triggering more than once within the same element
     if (!currentTarget.contains(relatedTarget)) {
-      stopSpeechRec(null, false);
+      const regExpValue = new RegExp(target.innerText, `i`);
+      const isSameTag = target.tagName === relatedTarget?.tagName;
+      const isSameElement =
+        isSameTag &&
+        // innerText of element changes
+        relatedTarget?.innerText.match(regExpValue);
+      // if blur event was triggered by focus event calling startSpeechRec(), don't play audioEnd
+      stopSpeechRec(null, isSameElement);
     }
   };
   useEffect(() => {
@@ -51,7 +58,7 @@ export const SpeechRecognition = () => {
         </Button>
       )}
       <Button onClick={startSpeechRec}>
-        {transcript.listening ? `Listening ...` : `Start listening`}
+        {transcript.listening ? `Listening` : `Start listening`}
       </Button>
       <Button onClick={stopSpeechRec}>Stop speech recognition service</Button>
       <p>{transcript.preview}</p>
