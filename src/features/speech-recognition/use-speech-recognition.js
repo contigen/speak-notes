@@ -30,6 +30,8 @@ export function useSpeechRecognition() {
     // calling Recognition.start() more than once throws an error
     if (!speechRecVarsRef.current.clicked) {
       Recognition.start();
+      audioEnd.pause();
+      audioEnd.currentTime = 0;
       audioStart.play();
       updateStateConfig({ listening: true });
       speechRecVarsRef.current.clicked = true;
