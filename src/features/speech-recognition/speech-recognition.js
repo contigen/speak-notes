@@ -37,7 +37,7 @@ export const SpeechRecognition = () => {
         isSameTag &&
         // innerText of element changes
         relatedTarget?.innerText.match(regExpValue);
-      // if blur event was triggered by focus event calling startSpeechRec(), don't play audioEnd
+      // if blur event was triggered by focus event calling startSpeechRec() through .click(), don't play audioEnd
       stopSpeechRec(null, isSameElement);
     }
   };
