@@ -1,6 +1,6 @@
 # Speak-Notes
 
-A voice-note taking app using the JavaScript Web Speech API; the app transcribes recognised speech into text and shows the result in a preview format and a note format, with real-time edit - the highlight of the app. The preview shows the transcribed speech simultaneously as speech is being recognised, and the note form displays recognised speech which sound complete, as in a complete sentence. There are sounds played when the speech recognition service is started and stopped, as a cue to users. The app listens in the language provided by the user agent. It allows to download the transcript, which is split into a new line at every period, as a text file.
+A voice-note app using the JavaScript Web Speech API; the app transcribes recognised speech into text and shows the result in a preview format and a note format, with real-time edit. The preview shows the transcribed speech simultaneously as speech is being recognised, and the note form displays recognised speech which sound complete, as in a complete sentence. separate sounds are played when the speech recognition service is started and stopped, as a cue to users. The app listens in the language provided by the user agent. It allows to download the transcript, which is split into a new line at every period, as a text file.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -9,7 +9,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - MS Edge seems to give faster results - the results it gives syncs well with the recognised speech.
 - Brave browser supports it, apparently, but always shows a network error. [Here's a link that describes the issue](https://stackoverflow.com/questions/74113965/speechrecognition-emitting-network-error-event-in-brave-browser)
 - Firefox lacks support for the API, currently.
-- Some browsers use a server-based recognition engine. The audio is sent to a web service for recognition processing, so it works online only - major reason Brave gives an error.
+- Some browsers use a server-based recognition engine. The audio is sent to a web service for recognition processing, so it works online only
+- poor results in case of poor network signal, expected
 
 ## Usage
 
