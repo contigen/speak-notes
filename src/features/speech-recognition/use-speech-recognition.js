@@ -38,11 +38,11 @@ export function useSpeechRecognition() {
       speechRecVarsRef.current.stopped = false;
     }
   };
-  const stopSpeechRec = (_, isBlurred) => {
+  const stopSpeechRec = (_, isBlurredBySameElement) => {
     if (speechRecVarsRef.current.clicked) {
       audioStart.pause();
       audioStart.currentTime = 0;
-      !isBlurred && audioEnd.play();
+      !isBlurredBySameElement && audioEnd.play();
       Recognition.stop();
       updateStateConfig({ listening: false });
       setSpeechErrMessage(``);
