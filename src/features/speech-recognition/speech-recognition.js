@@ -18,13 +18,13 @@ export const SpeechRecognition = () => {
     });
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
-  const handleChange = (value) => {
+  const handleChange = ({ target: { value } }) => {
     setTranscript((prev) => ({ ...prev, note: value }));
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
     // avoid focus event triggering more than once within the same element
     if (!currentTarget.contains(relatedTarget)) {
-      // before blur event trigger of the active element, clicking a separate element triggers only blur event, the click event isn't triggered, use focus event with .click() to run the click event's handler simultaneously
+      // if blur event is triggered by clicking a separate element, only blur event is triggered, the click event isn't, use focus event with .click() to run the click event's handler almost simultaneously or sequentially
       target.click();
     }
   };
@@ -66,10 +66,7 @@ export const SpeechRecognition = () => {
         <div>
           <br />
           <div>
-            <TextArea
-              value={transcript.note}
-              onChange={({ target: { value } }) => handleChange(value)}
-            />
+            <TextArea value={transcript.note} onChange={handleChange} />
             {transcript.noMatch && (
               <p>Not very loud, let's hear it again ...</p>
             )}
