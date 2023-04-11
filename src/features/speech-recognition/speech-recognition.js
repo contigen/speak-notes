@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { useSpeechRecognition } from "./use-speech-recognition";
 import { Button } from "../ui/button";
 import { TextArea } from "../ui/textarea";
@@ -11,14 +11,42 @@ export const SpeechRecognition = () => {
     stopSpeechRec,
   } = useSpeechRecognition();
 
+  const [dirty, setDirty] = useState({
+    undo: false,
+    redo: false,
+  });
   const linkRef = useRef();
+  const transcriptRef = useRef({
+    undo: ``,
+    redo: ``,
+  });
   const downloadTranscript = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
     });
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
+  const undoTranscript = () => {
+    setTranscript((prev) => ({
+      ...prev,
+      note: prev.note + ` ` + transcriptRef.current.redo,
+    }));
+  };
+  const redoTranscript = () => {
+    if (!dirty.undo) return;
+    setTranscript((prev) => ({
+      ...prev,
+      note: transcriptRef.current.redo ? transcriptRef.current.redo : ``,
+    }));
+  };
   const handleChange = ({ target: { value } }) => {
+    setDirty((prevState) => ({ ...prevState, undo: true }));
+    const transcriptValue = transcript.note.split(` `);
+    const newValue = value.split(` `);
+    const newValue2 = newValue.filter(
+      (text) => !transcriptValue.includes(text)
+    );
+    transcriptRef.current.redo = newValue2.join();
     setTranscript((prev) => ({ ...prev, note: value }));
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
@@ -42,6 +70,16 @@ export const SpeechRecognition = () => {
     }
   };
   useEffect(() => {
+    setDirty((prevState) => ({ ...prevState, undo: true }));
+
+    if (dirty.undo) {
+      setDirty((prevState) => ({ ...prevState, redo: true }));
+    }
+  }, [dirty.undo, transcript.note]);
+  // useEffect(() => {
+  //   console.log(`changed`);
+  // }, [transcript.note]);
+  useEffect(() => {
     const linkElement = linkRef.current;
     return () => {
       if (linkElement?.getAttribute(`href`) !== `#`) {
@@ -62,11 +100,19 @@ export const SpeechRecognition = () => {
       </Button>
       <Button onClick={stopSpeechRec}>Stop speech recognition service</Button>
       <p>{transcript.preview}</p>
-      {transcript.note ? (
+      {transcript.note || dirty.undo ? (
         <div>
           <br />
           <div>
             <TextArea value={transcript.note} onChange={handleChange} />
+            <div style={{ textAlign: `center`, marginBlock: `1rem` }}>
+              <Button onClick={undoTranscript} disabled={!dirty.undo}>
+                Undo
+              </Button>
+              <Button onClick={redoTranscript} disabled={!dirty.redo}>
+                Redo
+              </Button>
+            </div>
             {transcript.noMatch && (
               <p>Not very loud, let's hear it again ...</p>
             )}
