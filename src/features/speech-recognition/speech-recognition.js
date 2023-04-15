@@ -16,10 +16,8 @@ export const SpeechRecognition = () => {
     redo: false,
   });
   const linkRef = useRef();
-  const transcriptRef = useRef({
-    undo: ``,
-    redo: ``,
-  });
+  const valueRef = useRef([]);
+  const idxRef = useRef(0);
   const downloadTranscript = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
@@ -27,27 +25,36 @@ export const SpeechRecognition = () => {
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
   const undoTranscript = () => {
-    setTranscript((prev) => ({
-      ...prev,
-      note: prev.note + ` ` + transcriptRef.current.redo,
+    if (idxRef.current === 0) {
+      setDirty((prevState) => ({ ...prevState, undo: false }));
+      return;
+    }
+    setDirty((prevState) => ({ ...prevState, redo: true }));
+    setTranscript((prevState) => ({
+      ...prevState,
+      note: valueRef.current[idxRef.current],
     }));
+    idxRef.current--;
+    console.log(idxRef.current);
   };
   const redoTranscript = () => {
-    if (!dirty.undo) return;
-    setTranscript((prev) => ({
-      ...prev,
-      note: transcriptRef.current.redo ? transcriptRef.current.redo : ``,
+    // setDirty((prevState) => ({ ...prevState, redo: false }));
+    if (idxRef.current > valueRef.current.length) return;
+    if (idxRef.current === valueRef.current.length) {
+      setDirty((prevState) => ({ ...prevState, redo: false }));
+      return;
+    }
+    setTranscript((prevState) => ({
+      ...prevState,
+      note: valueRef.current[idxRef.current],
     }));
+    idxRef.current++;
   };
   const handleChange = ({ target: { value } }) => {
-    setDirty((prevState) => ({ ...prevState, undo: true }));
-    const transcriptValue = transcript.note.split(` `);
-    const newValue = value.split(` `);
-    const newValue2 = newValue.filter(
-      (text) => !transcriptValue.includes(text)
-    );
-    transcriptRef.current.redo = newValue2.join();
+    valueRef.current.push(value);
+    idxRef.current = valueRef.current.length - 1;
     setTranscript((prev) => ({ ...prev, note: value }));
+    setDirty((prevState) => ({ ...prevState, undo: true }));
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
     // avoid focus event triggering more than once within the same element
