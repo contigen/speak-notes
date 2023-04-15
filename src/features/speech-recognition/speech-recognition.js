@@ -70,16 +70,6 @@ export const SpeechRecognition = () => {
     }
   };
   useEffect(() => {
-    setDirty((prevState) => ({ ...prevState, undo: true }));
-
-    if (dirty.undo) {
-      setDirty((prevState) => ({ ...prevState, redo: true }));
-    }
-  }, [dirty.undo, transcript.note]);
-  // useEffect(() => {
-  //   console.log(`changed`);
-  // }, [transcript.note]);
-  useEffect(() => {
     const linkElement = linkRef.current;
     return () => {
       if (linkElement?.getAttribute(`href`) !== `#`) {
@@ -87,7 +77,6 @@ export const SpeechRecognition = () => {
       }
     };
   }, []);
-
   return (
     <section onFocus={handleFocus} onBlur={handleBlur}>
       {!transcript.listening && (
