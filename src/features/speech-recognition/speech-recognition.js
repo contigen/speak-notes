@@ -18,6 +18,7 @@ export const SpeechRecognition = () => {
   const linkRef = useRef();
   const valueRef = useRef([]);
   const idxRef = useRef(0);
+
   const downloadTranscript = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
@@ -25,30 +26,21 @@ export const SpeechRecognition = () => {
     linkRef.current.href = URL.createObjectURL(blob);
   }, [transcript]);
   const undoTranscript = () => {
-    if (idxRef.current === 0) {
-      setDirty((prevState) => ({ ...prevState, undo: false }));
-      return;
-    }
+    if (idxRef.current === 0) return;
     setDirty((prevState) => ({ ...prevState, redo: true }));
     setTranscript((prevState) => ({
       ...prevState,
       note: valueRef.current[idxRef.current],
     }));
-    idxRef.current--;
-    console.log(idxRef.current);
+    --idxRef.current;
   };
   const redoTranscript = () => {
-    // setDirty((prevState) => ({ ...prevState, redo: false }));
-    if (idxRef.current > valueRef.current.length) return;
-    if (idxRef.current === valueRef.current.length) {
-      setDirty((prevState) => ({ ...prevState, redo: false }));
-      return;
-    }
+    if (idxRef.current === valueRef.current.length) return;
     setTranscript((prevState) => ({
       ...prevState,
       note: valueRef.current[idxRef.current],
     }));
-    idxRef.current++;
+    ++idxRef.current;
   };
   const handleChange = ({ target: { value } }) => {
     valueRef.current.push(value);
@@ -76,6 +68,16 @@ export const SpeechRecognition = () => {
       stopSpeechRec(null, isSameElement);
     }
   };
+  useEffect(() => {
+    if (idxRef.current === valueRef.current.length - 1) {
+      setDirty((prevState) => ({ ...prevState, redo: false }));
+      return;
+    }
+    if (idxRef.current < 1) {
+      setDirty((prevState) => ({ ...prevState, undo: false }));
+      return;
+    }
+  }, [transcript.note]);
   useEffect(() => {
     const linkElement = linkRef.current;
     return () => {
