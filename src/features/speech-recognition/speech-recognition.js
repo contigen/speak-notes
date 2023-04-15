@@ -18,6 +18,7 @@ export const SpeechRecognition = () => {
   const linkRef = useRef();
   const valueRef = useRef([]);
   const idxRef = useRef(0);
+  const timeStampRef = useRef([]);
 
   const downloadTranscript = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
@@ -42,9 +43,17 @@ export const SpeechRecognition = () => {
     }));
     ++idxRef.current;
   };
-  const handleChange = ({ target: { value } }) => {
-    valueRef.current.push(value);
+  const handleChange = ({ timeStamp, target: { value } }) => {
+    const KEY_PRESS_TIME_DIFF = 500;
+    if (timeStampRef.current.length > 1) {
+      const timeDiff =
+        timeStampRef.current.at(-1) - timeStampRef.current.at(-2);
+      console.log(`timeDiffInMs`, timeDiff);
+      timeDiff > KEY_PRESS_TIME_DIFF && valueRef.current.push(value);
+    }
+    timeStampRef.current.push(timeStamp);
     idxRef.current = valueRef.current.length - 1;
+    timeStampRef.current.length === 1 && valueRef.current.push(value);
     setTranscript((prev) => ({ ...prev, note: value }));
     setDirty((prevState) => ({ ...prevState, undo: true }));
   };
