@@ -15,6 +15,7 @@ export const SpeechRecognition = () => {
     undo: false,
     redo: false,
   });
+  const textareaRef = useRef();
   const linkRef = useRef();
   const valueRef = useRef([]);
   const idxRef = useRef(0);
@@ -35,6 +36,23 @@ export const SpeechRecognition = () => {
     }));
     --idxRef.current;
   };
+  const simulateKeyPress = () => {
+    const event = new KeyboardEvent(`keydown`, {
+      key: `z`,
+      ctrlKey: true,
+      bubbles: true,
+      code: `KeyZ`,
+    });
+    const event2 = new KeyboardEvent(`keydown`, {
+      key: `Control`,
+      ctrlKey: true,
+      bubbles: true,
+      code: "ControlLeft",
+    });
+    textareaRef.current.dispatchEvent(event2);
+    textareaRef.current.dispatchEvent(event);
+    textareaRef.current.focus();
+  };
   const redoTranscript = () => {
     if (idxRef.current === valueRef.current.length) return;
     setTranscript((prevState) => ({
@@ -44,11 +62,10 @@ export const SpeechRecognition = () => {
     ++idxRef.current;
   };
   const handleChange = ({ timeStamp, target: { value } }) => {
-    const KEY_PRESS_TIME_DIFF = 500;
+    const KEY_PRESS_TIME_DIFF = 200;
     if (timeStampRef.current.length > 1) {
       const timeDiff =
         timeStampRef.current.at(-1) - timeStampRef.current.at(-2);
-      console.log(`timeDiffInMs`, timeDiff);
       timeDiff > KEY_PRESS_TIME_DIFF && valueRef.current.push(value);
     }
     timeStampRef.current.push(timeStamp);
@@ -111,8 +128,20 @@ export const SpeechRecognition = () => {
         <div>
           <br />
           <div>
-            <TextArea value={transcript.note} onChange={handleChange} />
+            <TextArea
+              value={transcript.note}
+              onChange={handleChange}
+              onBlur={(evt) => {
+                evt.preventDefault();
+                textareaRef.current.focus();
+              }}
+              ref={textareaRef}
+              onKeyDown={(e) => {
+                console.log(e);
+              }}
+            />
             <div style={{ textAlign: `center`, marginBlock: `1rem` }}>
+              <Button onClick={simulateKeyPress}>Undo2</Button>
               <Button onClick={undoTranscript} disabled={!dirty.undo}>
                 Undo
               </Button>
