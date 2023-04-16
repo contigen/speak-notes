@@ -36,23 +36,6 @@ export const SpeechRecognition = () => {
     }));
     --idxRef.current;
   };
-  const simulateKeyPress = () => {
-    const event = new KeyboardEvent(`keydown`, {
-      key: `z`,
-      ctrlKey: true,
-      bubbles: true,
-      code: `KeyZ`,
-    });
-    const event2 = new KeyboardEvent(`keydown`, {
-      key: `Control`,
-      ctrlKey: true,
-      bubbles: true,
-      code: "ControlLeft",
-    });
-    textareaRef.current.dispatchEvent(event2);
-    textareaRef.current.dispatchEvent(event);
-    textareaRef.current.focus();
-  };
   const redoTranscript = () => {
     if (idxRef.current === valueRef.current.length) return;
     setTranscript((prevState) => ({
@@ -131,17 +114,9 @@ export const SpeechRecognition = () => {
             <TextArea
               value={transcript.note}
               onChange={handleChange}
-              onBlur={(evt) => {
-                evt.preventDefault();
-                textareaRef.current.focus();
-              }}
               ref={textareaRef}
-              onKeyDown={(e) => {
-                console.log(e);
-              }}
             />
             <div style={{ textAlign: `center`, marginBlock: `1rem` }}>
-              <Button onClick={simulateKeyPress}>Undo2</Button>
               <Button onClick={undoTranscript} disabled={!dirty.undo}>
                 Undo
               </Button>
