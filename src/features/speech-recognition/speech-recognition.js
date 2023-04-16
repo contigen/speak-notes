@@ -15,6 +15,7 @@ export const SpeechRecognition = () => {
     undo: false,
     redo: false,
   });
+  const [shareData, setShareData] = useState(``);
   const textareaRef = useRef();
   const linkRef = useRef();
   const valueRef = useRef([]);
@@ -77,6 +78,19 @@ export const SpeechRecognition = () => {
       stopSpeechRec(null, isSameElement);
     }
   };
+  const shareTranscript = async () => {
+    const shareData = {
+      title: `Speak-Notes`,
+      text: transcript.note,
+      url: `https://speak-notes.pages.dev`,
+    };
+    try {
+      await navigator.share(shareData);
+      setShareData(`Transcript shared!`);
+    } catch (err) {
+      setShareData(`Couldn't share transcript: ${err}`);
+    }
+  };
   useEffect(() => {
     if (idxRef.current === valueRef.current.length - 1) {
       setDirty((prevState) => ({ ...prevState, redo: false }));
@@ -89,6 +103,9 @@ export const SpeechRecognition = () => {
   }, [transcript.note]);
   useEffect(() => {
     const linkElement = linkRef.current;
+    if (!navigator.canShare) {
+      setShareData(`Your browser doesn't support the Web Share API.`);
+    }
     return () => {
       if (linkElement?.getAttribute(`href`) !== `#`) {
         URL.revokeObjectURL(linkElement?.href);
@@ -123,6 +140,8 @@ export const SpeechRecognition = () => {
               <Button onClick={redoTranscript} disabled={!dirty.redo}>
                 Redo
               </Button>
+              <Button onClick={shareTranscript}>Share Transcript</Button>
+              <p>{shareData}</p>
             </div>
             {transcript.noMatch && (
               <p>Not very loud, let's hear it again ...</p>
