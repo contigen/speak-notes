@@ -1,10 +1,9 @@
 import "./textarea.css";
-import { useRef, useLayoutEffect } from "react";
+import { useLayoutEffect, forwardRef } from "react";
 
 const MIN_TEXTAREA_HEIGHT = 30;
 
-export const TextArea = (props) => {
-  const textareaRef = useRef();
+export const TextArea = forwardRef((props, textareaRef) => {
   useLayoutEffect(() => {
     // Reset height - avoid textarea shrink
     textareaRef.current.style.height = `inherit`;
@@ -12,7 +11,7 @@ export const TextArea = (props) => {
       textareaRef.current.scrollHeight,
       MIN_TEXTAREA_HEIGHT
     )}px`;
-  }, [props.value]);
+  }, [props.value, textareaRef]);
   return (
     <textarea
       {...props}
@@ -22,4 +21,4 @@ export const TextArea = (props) => {
       ref={textareaRef}
     ></textarea>
   );
-};
+});
