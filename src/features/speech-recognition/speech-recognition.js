@@ -63,7 +63,7 @@ export const SpeechRecognition = () => {
       title: `Speak-Notes`,
       text: transcript.note,
       url: `https://speak-notes.pages.dev`,
-      file,
+      files: [file],
     };
     try {
       await navigator.share(shareData);
