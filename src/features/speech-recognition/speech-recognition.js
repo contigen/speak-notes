@@ -61,7 +61,6 @@ export const SpeechRecognition = () => {
     const file = createFile();
     const shareData = {
       title: `Speak-Notes`,
-      text: transcript.note,
       url: `https://speak-notes.pages.dev`,
       files: [file],
     };
