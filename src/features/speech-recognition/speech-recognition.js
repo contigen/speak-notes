@@ -71,6 +71,8 @@ export const SpeechRecognition = () => {
     } catch {
       setShareData(`Couldn't share transcript`);
     }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setShareData(``);
   };
   const copyTranscript = async () => {
     await navigator.clipboard.writeText(transcript.note);
