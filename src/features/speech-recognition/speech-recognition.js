@@ -23,12 +23,16 @@ export const SpeechRecognition = () => {
   const timestampRef = useRef(Array(1));
   const [copyBtnText, setCopyBtnText] = useState(`Copy Transcript`);
 
-  const downloadTranscript = useCallback(() => {
+  const generateBlob = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
     });
+    return blob;
+  }, [transcript.note]);
+  const downloadTranscript = useCallback(() => {
+    const blob = generateBlob();
     linkRef.current.href = URL.createObjectURL(blob);
-  }, [transcript]);
+  }, [generateBlob]);
   const undoTranscript = () => {
     if (idxRef.current === 0) return;
     setDirty((prevState) => ({ ...prevState, redo: true }));
