@@ -45,6 +45,20 @@ export const SpeechRecognition = () => {
     }));
     ++idxRef.current;
   };
+  const shareTranscript = async () => {
+    const shareData = {
+      title: `Speak-Notes`,
+      text: transcript.note,
+      url: `https://speak-notes.pages.dev`,
+      file: null,
+    };
+    try {
+      await navigator.share(shareData);
+      setShareData(`Transcript shared!`);
+    } catch {
+      setShareData(`Couldn't share transcript`);
+    }
+  };
   const handleChange = ({ timeStamp, target: { value } }) => {
     const KEY_PRESS_TIME_DIFF = 200;
     if (timestampRef.current[0]) {
@@ -76,19 +90,6 @@ export const SpeechRecognition = () => {
         relatedTarget?.innerText.match(regExpValue);
       // if blur event was triggered by focus event calling startSpeechRec() through .click(), don't play audioEnd
       stopSpeechRec(null, isSameElement);
-    }
-  };
-  const shareTranscript = async () => {
-    const shareData = {
-      title: `Speak-Notes`,
-      text: transcript.note,
-      url: `https://speak-notes.pages.dev`,
-    };
-    try {
-      await navigator.share(shareData);
-      setShareData(`Transcript shared!`);
-    } catch (err) {
-      setShareData(`Couldn't share transcript: ${err}`);
     }
   };
   useEffect(() => {
