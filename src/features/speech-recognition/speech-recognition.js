@@ -29,6 +29,13 @@ export const SpeechRecognition = () => {
     });
     return blob;
   }, [transcript.note]);
+  const createFile = useCallback(() => {
+    const blob = generateBlob();
+    const file = new File([blob], `transcript.txt`, {
+      type: `text/plain`,
+    });
+    return file;
+  }, [generateBlob]);
   const downloadTranscript = useCallback(() => {
     const blob = generateBlob();
     linkRef.current.href = URL.createObjectURL(blob);
@@ -51,11 +58,12 @@ export const SpeechRecognition = () => {
     ++idxRef.current;
   };
   const shareTranscript = async () => {
+    const file = createFile();
     const shareData = {
       title: `Speak-Notes`,
       text: transcript.note,
       url: `https://speak-notes.pages.dev`,
-      file: null,
+      file,
     };
     try {
       await navigator.share(shareData);
