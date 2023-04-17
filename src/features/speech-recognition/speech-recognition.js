@@ -84,6 +84,7 @@ export const SpeechRecognition = () => {
     const KEY_PRESS_TIME_DIFF = 200;
     if (timestampRef.current[0]) {
       const timeDiff = timeStamp - timestampRef.current[0];
+      // react's onChange event triggers on every single change; undoTranscript() & redoTranscript() shouldn't, check if change was made within a certain time frame
       timeDiff > KEY_PRESS_TIME_DIFF && valueRef.current.push(value);
     } else {
       valueRef.current.push(value);
