@@ -21,6 +21,7 @@ export const SpeechRecognition = () => {
   const valueRef = useRef([]);
   const idxRef = useRef(0);
   const timestampRef = useRef(Array(1));
+  const [copyBtnText, setCopyBtnText] = useState(`Copy Transcript`);
 
   const downloadTranscript = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
@@ -58,6 +59,13 @@ export const SpeechRecognition = () => {
     } catch {
       setShareData(`Couldn't share transcript`);
     }
+  };
+  const copyTranscript = async () => {
+    await navigator.clipboard.writeText(transcript.note);
+    setCopyBtnText(`Copied to clipboard!`);
+    setTimeout(() => {
+      setCopyBtnText(`Copy Transcript`);
+    }, 1000);
   };
   const handleChange = ({ timeStamp, target: { value } }) => {
     const KEY_PRESS_TIME_DIFF = 200;
@@ -142,6 +150,7 @@ export const SpeechRecognition = () => {
                 Redo
               </Button>
               <Button onClick={shareTranscript}>Share Transcript</Button>
+              <Button onClick={copyTranscript}>{copyBtnText}</Button>
               <p>{shareData}</p>
             </div>
             {transcript.noMatch && (
