@@ -12,8 +12,3 @@ input::file-selector-button {
         opacity: .65;
     }
 }
-
-input:active {
-    border: 2px dotted #ccc;
-    opacity: 1;
-}
