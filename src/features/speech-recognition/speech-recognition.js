@@ -117,16 +117,12 @@ export const SpeechRecognition = () => {
       stopSpeechRec(null, isSameElement);
     }
   };
-  const handleFileChange = ({ target: { files } }) => {
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      setTranscript((prevState) => ({
-        ...prevState,
-        note: reader.result,
-      }));
-    };
+  const handleFileChange = async ({ target: { files } }) => {
+    const textFile = await files[0].text();
+    setTranscript((prevState) => ({
+      ...prevState,
+      note: prevState.note + ` ` + textFile,
+    }));
   };
   useEffect(() => {
     if (idxRef.current === valueRef.current.length - 1) {
