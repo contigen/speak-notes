@@ -117,6 +117,17 @@ export const SpeechRecognition = () => {
       stopSpeechRec(null, isSameElement);
     }
   };
+  const handleFileChange = ({ target: { files } }) => {
+    const file = files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+      setTranscript((prevState) => ({
+        ...prevState,
+        note: reader.result,
+      }));
+    };
+  };
   useEffect(() => {
     if (idxRef.current === valueRef.current.length - 1) {
       setDirty((prevState) => ({ ...prevState, redo: false }));
@@ -168,6 +179,11 @@ export const SpeechRecognition = () => {
               </Button>
               <Button onClick={shareTranscript}>Share Transcript</Button>
               <Button onClick={copyTranscript}>{copyBtnText}</Button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                accept=".doc, .docx,.txt, .odt"
+              />
               <p>{shareData}</p>
             </div>
             {transcript.noMatch && (
