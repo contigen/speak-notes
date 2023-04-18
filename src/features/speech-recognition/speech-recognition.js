@@ -24,6 +24,10 @@ export const SpeechRecognition = () => {
   const timestampRef = useRef(Array(1));
   const [copyBtnText, setCopyBtnText] = useState(`Copy Transcript`);
 
+  const showInvalidFileText = (text) => {
+    setShareData(text);
+    clearDataAfter2s();
+  };
   const clearDataAfter2s = async () => {
     await wait(2000);
     setShareData(``);
@@ -123,10 +127,13 @@ export const SpeechRecognition = () => {
     }
   };
   const handleFileChange = async ({ target: { files } }) => {
+    if (!files.length) {
+      showInvalidFileText(`Please select a text file`);
+      return;
+    }
     const file = files[0];
     if (!(file?.type === `text/plain`)) {
-      setShareData(`Only text files are allowed.`);
-      clearDataAfter2s();
+      showInvalidFileText(`Only text file are allowed.`);
       return;
     }
     const textFile = await file?.text();
