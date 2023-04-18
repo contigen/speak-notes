@@ -80,7 +80,7 @@ export const SpeechRecognition = () => {
       setCopyBtnText(`Copy Transcript`);
     }, 1000);
   };
-  const handleChange = ({ timeStamp, target: { value } }) => {
+  const trackChangeEvtTimestamp = (timeStamp, value) => {
     const KEY_PRESS_TIME_DIFF = 200;
     if (timestampRef.current[0]) {
       const timeDiff = timeStamp - timestampRef.current[0];
@@ -90,6 +90,9 @@ export const SpeechRecognition = () => {
       valueRef.current.push(value);
     }
     timestampRef.current[0] = timeStamp;
+  };
+  const handleChange = ({ timeStamp, target: { value } }) => {
+    trackChangeEvtTimestamp(timeStamp, value);
     idxRef.current = valueRef.current.length - 1;
     setTranscript((prev) => ({ ...prev, note: value }));
     setDirty((prevState) => ({ ...prevState, undo: true }));
