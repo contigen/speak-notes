@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { useSpeechRecognition } from "./use-speech-recognition";
 import { Button } from "../ui/button";
 import { TextArea } from "../ui/textarea";
+import { InputFile } from "./../ui/input";
 export const SpeechRecognition = () => {
   const {
     transcript,
@@ -123,7 +124,7 @@ export const SpeechRecognition = () => {
   };
   const handleFileChange = async ({ target: { files } }) => {
     const file = files[0];
-    if (!(file.type === `.txt`)) {
+    if (!(file.type === `text/plain`)) {
       setShareData(`Only text files are allowed.`);
       clearDataAfter2s();
       return;
@@ -185,7 +186,7 @@ export const SpeechRecognition = () => {
               </Button>
               <Button onClick={shareTranscript}>Share Transcript</Button>
               <Button onClick={copyTranscript}>{copyBtnText}</Button>
-              <input type="file" onChange={handleFileChange} accept=".txt" />
+              <InputFile onChange={handleFileChange} accept=".txt" />
               <p>{shareData}</p>
             </div>
             {transcript.noMatch && (
