@@ -23,6 +23,11 @@ export const SpeechRecognition = () => {
   const timestampRef = useRef(Array(1));
   const [copyBtnText, setCopyBtnText] = useState(`Copy Transcript`);
 
+  const clearDataAfter2s = async () => {
+    await wait(2000);
+    setShareData(``);
+  };
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const generateBlob = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
@@ -70,8 +75,7 @@ export const SpeechRecognition = () => {
     } catch {
       setShareData(`Couldn't share transcript`);
     }
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setShareData(``);
+    clearDataAfter2s();
   };
   const copyTranscript = async () => {
     await navigator.clipboard.writeText(transcript.note);
@@ -118,7 +122,13 @@ export const SpeechRecognition = () => {
     }
   };
   const handleFileChange = async ({ target: { files } }) => {
-    const textFile = await files[0].text();
+    const file = files[0];
+    if (!(file.type === `.txt`)) {
+      setShareData(`Only text files are allowed.`);
+      clearDataAfter2s();
+      return;
+    }
+    const textFile = await file.text();
     setTranscript((prevState) => ({
       ...prevState,
       note: prevState.note + ` ` + textFile,
@@ -175,11 +185,7 @@ export const SpeechRecognition = () => {
               </Button>
               <Button onClick={shareTranscript}>Share Transcript</Button>
               <Button onClick={copyTranscript}>{copyBtnText}</Button>
-              <input
-                type="file"
-                onChange={handleFileChange}
-                accept=".doc, .docx,.txt, .odt"
-              />
+              <input type="file" onChange={handleFileChange} accept=".txt" />
               <p>{shareData}</p>
             </div>
             {transcript.noMatch && (
