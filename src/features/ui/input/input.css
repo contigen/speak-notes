@@ -1,0 +1,19 @@
+input::file-selector-button {
+    border-radius: 50px;
+    border: 2px solid #ddd;
+    background: transparent;
+    transition: .3s cubic-bezier(0.215, 0.610, 0.355, 1);
+    padding: .2rem 1rem;
+    font: inherit;
+}
+
+@media (hover: hover) {
+    input[type="file"]:hover {
+        opacity: .65;
+    }
+}
+
+input:active {
+    border: 2px dotted #ccc;
+    opacity: 1;
+}
