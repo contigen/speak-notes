@@ -124,12 +124,12 @@ export const SpeechRecognition = () => {
   };
   const handleFileChange = async ({ target: { files } }) => {
     const file = files[0];
-    if (!(file.type === `text/plain`)) {
+    if (!(file?.type === `text/plain`)) {
       setShareData(`Only text files are allowed.`);
       clearDataAfter2s();
       return;
     }
-    const textFile = await file.text();
+    const textFile = await file?.text();
     setTranscript((prevState) => ({
       ...prevState,
       note: prevState.note + ` ` + textFile,
