@@ -7,12 +7,12 @@ button {
 }
 
 @media (hover: hover) {
-    button:hover {
+    button:hover:enabled {
         opacity: .65;
     }
 }
 
-button:active {
+button:active:enabled {
     border: 2px dotted #ccc;
     opacity: 1;
 }
