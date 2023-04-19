@@ -19,9 +19,9 @@ export const SpeechRecognition = () => {
   const [shareData, setShareData] = useState(``);
   const textareaRef = useRef();
   const linkRef = useRef();
-  const valueRef = useRef([]);
+  const valueArrRef = useRef([]);
   const idxRef = useRef(0);
-  const timestampRef = useRef(Array(1));
+  const timestampRef = useRef();
   const [copyBtnText, setCopyBtnText] = useState(`Copy Transcript`);
 
   const showInvalidFileText = (text) => {
@@ -33,6 +33,9 @@ export const SpeechRecognition = () => {
     setShareData(``);
   };
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const updateValueArr = (value) => {
+    valueArrRef.current.unshift(value);
+  };
   const generateBlob = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
       type: `text/plain`,
@@ -50,22 +53,30 @@ export const SpeechRecognition = () => {
     const blob = generateBlob();
     linkRef.current.href = URL.createObjectURL(blob);
   }, [generateBlob]);
-  const undoTranscript = () => {
-    if (idxRef.current === 0) return;
-    setDirty((prevState) => ({ ...prevState, redo: true }));
+  const undoTranscriptChange = () => {
+    const valueArrLength = valueArrRef.current.length;
+    if (idxRef.current >= valueArrLength) {
+      setDirty((prevState) => ({ ...prevState, undo: false }));
+      return;
+    }
     setTranscript((prevState) => ({
       ...prevState,
-      note: valueRef.current[idxRef.current],
+      note: valueArrRef.current[idxRef.current],
+    }));
+    idxRef.current++;
+    if (!dirty.redo) setDirty((prevState) => ({ ...prevState, redo: true }));
+  };
+  const redoTranscriptChange = () => {
+    if (idxRef.current < 0) {
+      setDirty((prevState) => ({ ...prevState, redo: false }));
+      return;
+    }
+    setTranscript((prevState) => ({
+      ...prevState,
+      note: valueArrRef.current[idxRef.current],
     }));
     --idxRef.current;
-  };
-  const redoTranscript = () => {
-    if (idxRef.current === valueRef.current.length) return;
-    setTranscript((prevState) => ({
-      ...prevState,
-      note: valueRef.current[idxRef.current],
-    }));
-    ++idxRef.current;
+    if (!dirty.undo) setDirty((prevState) => ({ ...prevState, undo: true }));
   };
   const shareTranscript = async () => {
     const file = createFile();
@@ -91,19 +102,18 @@ export const SpeechRecognition = () => {
   };
   const trackChangeEvtTimestamp = (timeStamp, value) => {
     const KEY_PRESS_TIME_DIFF = 200;
-    if (timestampRef.current[0]) {
-      const timeDiff = timeStamp - timestampRef.current[0];
+    if (timestampRef.current) {
+      const timeDiff = timeStamp - timestampRef.current;
       // react's onChange event triggers on every single change; undoTranscript() & redoTranscript() shouldn't, check if change was made within a certain time frame
-      timeDiff > KEY_PRESS_TIME_DIFF && valueRef.current.push(value);
+      timeDiff > KEY_PRESS_TIME_DIFF && updateValueArr(value);
     } else {
-      valueRef.current.push(value);
+      updateValueArr(value);
     }
-    timestampRef.current[0] = timeStamp;
+    timestampRef.current = timeStamp;
   };
   const handleChange = ({ timeStamp, target: { value } }) => {
-    trackChangeEvtTimestamp(timeStamp, value);
-    idxRef.current = valueRef.current.length - 1;
-    setTranscript((prev) => ({ ...prev, note: value }));
+    trackChangeEvtTimestamp(timeStamp, transcript.note);
+    setTranscript((prevState) => ({ ...prevState, note: value }));
     setDirty((prevState) => ({ ...prevState, undo: true }));
   };
   const handleFocus = ({ currentTarget, relatedTarget, target }) => {
@@ -133,7 +143,7 @@ export const SpeechRecognition = () => {
     }
     const file = files[0];
     if (!(file?.type === `text/plain`)) {
-      showInvalidFileText(`Only text file are allowed.`);
+      showInvalidFileText(`Only text file is allowed.`);
       return;
     }
     const textFile = await file?.text();
@@ -142,16 +152,6 @@ export const SpeechRecognition = () => {
       note: prevState.note + ` ` + textFile,
     }));
   };
-  useEffect(() => {
-    if (idxRef.current === valueRef.current.length - 1) {
-      setDirty((prevState) => ({ ...prevState, redo: false }));
-      return;
-    }
-    if (idxRef.current < 1) {
-      setDirty((prevState) => ({ ...prevState, undo: false }));
-      return;
-    }
-  }, [transcript.note]);
   useEffect(() => {
     const linkElement = linkRef.current;
     if (!navigator.canShare) {
@@ -185,10 +185,10 @@ export const SpeechRecognition = () => {
               ref={textareaRef}
             />
             <div style={{ textAlign: `center`, marginBlock: `1rem` }}>
-              <Button onClick={undoTranscript} disabled={!dirty.undo}>
+              <Button onClick={undoTranscriptChange} disabled={!dirty.undo}>
                 Undo
               </Button>
-              <Button onClick={redoTranscript} disabled={!dirty.redo}>
+              <Button onClick={redoTranscriptChange} disabled={!dirty.redo}>
                 Redo
               </Button>
               <Button onClick={shareTranscript}>Share Transcript</Button>
