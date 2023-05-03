@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
+import { flushSync } from "react-dom";
 import { useSpeechRecognition } from "./use-speech-recognition";
 import { Button } from "../ui/button";
 import { TextArea } from "../ui/textarea";
@@ -59,22 +60,26 @@ export const SpeechRecognition = () => {
       setDirty((prevState) => ({ ...prevState, undo: false }));
       return;
     }
-    setTranscript((prevState) => ({
-      ...prevState,
-      note: valueArrRef.current[idxRef.current],
-    }));
+    flushSync(() =>
+      setTranscript((prevState) => ({
+        ...prevState,
+        note: valueArrRef.current[idxRef.current],
+      }))
+    );
     idxRef.current++;
     if (!dirty.redo) setDirty((prevState) => ({ ...prevState, redo: true }));
   };
   const redoTranscriptChange = () => {
-    if (idxRef.current < 0) {
+    if (idxRef.current <= 0) {
       setDirty((prevState) => ({ ...prevState, redo: false }));
       return;
     }
-    setTranscript((prevState) => ({
-      ...prevState,
-      note: valueArrRef.current[idxRef.current],
-    }));
+    flushSync(() =>
+      setTranscript((prevState) => ({
+        ...prevState,
+        note: valueArrRef.current[idxRef.current],
+      }))
+    );
     --idxRef.current;
     if (!dirty.undo) setDirty((prevState) => ({ ...prevState, undo: true }));
   };
@@ -113,6 +118,7 @@ export const SpeechRecognition = () => {
   };
   const handleChange = ({ timeStamp, target: { value } }) => {
     trackChangeEvtTimestamp(timeStamp, transcript.note);
+    valueArrRef.current.push(value);
     setTranscript((prevState) => ({ ...prevState, note: value }));
     setDirty((prevState) => ({ ...prevState, undo: true }));
   };
