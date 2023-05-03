@@ -25,17 +25,17 @@ export const SpeechRecognition = () => {
   const timestampRef = useRef();
   const [copyBtnText, setCopyBtnText] = useState(`Copy Transcript`);
 
-  const showInvalidFileText = (text) => {
-    setShareData(text);
-    clearDataAfter2s();
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const updateValueArr = (value) => {
+    valueArrRef.current.unshift(value);
   };
   const clearDataAfter2s = async () => {
     await wait(2000);
     setShareData(``);
   };
-  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const updateValueArr = (value) => {
-    valueArrRef.current.unshift(value);
+  const showInvalidFileText = (text) => {
+    setShareData(text);
+    clearDataAfter2s();
   };
   const generateBlob = useCallback(() => {
     const blob = new Blob([transcript.note.split(`.`).join(`\n`)], {
