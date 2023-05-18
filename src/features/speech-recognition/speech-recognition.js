@@ -13,6 +13,11 @@ export const SpeechRecognition = () => {
     startSpeechRec,
     stopSpeechRec,
   } = useSpeechRecognition();
+  let preloadVideo = true;
+  const connection = navigator.connection;
+  if (connection) {
+    console.log(connection.effectiveType);
+  }
 
   const [shareData, setShareData] = useState(``);
   const textareaRef = useRef();
@@ -94,7 +99,6 @@ export const SpeechRecognition = () => {
     // trackChangeEvtTimestamp(timeStamp, currentTranscript);
     isDirtyRef.current = true;
     flushSync(() => setTranscriptChange(value));
-    console.log(currentTranscript);
     noteRef.current = currentTranscript;
     setTranscript((prevState) => ({
       ...prevState,
@@ -206,6 +210,7 @@ export const SpeechRecognition = () => {
           Listening to your voice in <b>{navigator.language}</b>
         </p>
       )}
+      <p>{connection.effectiveType}</p>
     </section>
   );
 };
