@@ -210,7 +210,7 @@ export const SpeechRecognition = () => {
           Listening to your voice in <b>{navigator.language}</b>
         </p>
       )}
-      <p>{connection.effectiveType}</p>
+      <p>{connection?.effectiveType}</p>
     </section>
   );
 };
