@@ -6,11 +6,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Notes
 
-- MS Edge seems to give faster results - the results it gives syncs well with the recognised speech.
+- MS Edge seems to give faster results - the results it gives syncs well with the recognised speech; in fact, the transcript is punctuated.
 - Brave browser supports it, apparently, but always shows a network error. [Here's a link that describes the issue](https://stackoverflow.com/questions/74113965/speechrecognition-emitting-network-error-event-in-brave-browser)
 - Firefox lacks support for the API, currently.
-- Some browsers use a server-based recognition engine. The audio is sent to a web service for recognition processing, so it works online only
-- poor results in case of poor network signal, expected
+- Some browsers use a server-based recognition engine. The audio is sent to a web service for recognition processing, so it works online only.
+- poor results in case of poor network signal, apparently.
 
 ## Usage
 
@@ -26,6 +26,8 @@ Feature you could contribute:
 2. Anything that's interesting enough.
 
 ## Start the App
+
+---
 
 In the project directory, you can run:
 
@@ -44,3 +46,13 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Miscellaneous
+
+Currently, the repo has 3 branches: main, feat, develop.
+
+The main branch contains the MVP.
+
+The feat branch contains a experimental code: getting access to the user's media device, making a live video of it; getting the user's audio device details.
+
+The develop branch contains the latest app features - might seem counter-intuitive a bit, haha.
