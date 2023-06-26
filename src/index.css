@@ -1,22 +1,22 @@
-* {
-  box-sizing: border-box;
-  font-family: 'Samsung Sharp Sans', sans-serif;
-}
+ :root {
+   font: 15px/22px 'Inter var', system-ui, sans-serif;
+   -fontSize: 15px;
+   --lineHeight: calc(var(--fontSize) * 1.5);
+   --spacing: 2rem;
+   --spacingv: calc(var(--lineHeight) / 2);
+ }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+ * {
+   box-sizing: border-box;
+   /* font-family: 'Samsung Sharp Sans', sans-serif; */
+   font-synthesis: none;
+ }
 
-pre {
-  font-family: initial;
-  font-style: italic;
-}
-
-code {
-  font-family: monospace
-}
-
-kbd {
-  font-family: initial
-}
+ body {
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   webkit-text-size-adjust: 100%;
+   font-variant-ligatures: contextual common-ligatures;
+   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+   font-kerning: normal;
+ }
