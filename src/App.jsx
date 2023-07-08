@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./App.css";
-import { SpeechRecognition } from "./features/speech-recognition/";
+import { SpeechRecognition } from "./features/speech-recognition";
 import { InternetAccessMessage } from "./features/ui";
-import { HomepageMessage } from "./features/ui/";
+import { HomepageMessage } from "./features/ui";
 
 function App() {
   const [noteCount, setNoteCount] = useState([1]);
@@ -18,6 +18,7 @@ function App() {
   };
   return (
     <>
+      <h1>Hi, I'm Thibault.</h1>
       <HomepageMessage browserSupport />
       <button onClick={createSpeakNote}>Add note</button>
       <button onClick={deleteSpeakNote}>Delete note</button>

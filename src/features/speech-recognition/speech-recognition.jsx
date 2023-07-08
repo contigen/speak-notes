@@ -4,7 +4,7 @@ import useHistoryState from "./use-history-state";
 import { useSpeechRecognition } from "./use-speech-recognition";
 import { Button } from "../ui/button";
 import { TextArea } from "../ui/textarea";
-import { InputFile } from "./../ui/input";
+import { InputFile } from "../ui/input";
 export const SpeechRecognition = () => {
   const {
     transcript,
