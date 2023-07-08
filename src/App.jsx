@@ -18,7 +18,6 @@ function App() {
   };
   return (
     <>
-      <h1>Hi, I'm Thibault.</h1>
       <HomepageMessage browserSupport />
       <button onClick={createSpeakNote}>Add note</button>
       <button onClick={deleteSpeakNote}>Delete note</button>
