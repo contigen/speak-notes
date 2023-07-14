@@ -1,1 +1,1 @@
-export {TextArea} from './textarea.js'
+export { TextArea } from "./textarea";
