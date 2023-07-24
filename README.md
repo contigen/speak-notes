@@ -1,6 +1,7 @@
 # Speak-Notes
 
-A voice note transcription app using the JavaScript Web Speech API; the app transcribes recognised speech into text and shows the result in a preview format and a note format, with real-time edit. The preview shows the transcribed speech simultaneously as speech is being recognised, and the note form displays recognised speech which sound complete, as in a complete sentence. separate sounds are played when the speech recognition service is started and stopped, as a cue to users. The app listens in the language provided by the user agent. It allows to download the transcript, which is split into a new line at every period, as a text file.
+A voice note transcription app using the JavaScript Web Speech API; the app transcribes recognised speech into text and shows the result in a preview format and a note format, with real-time edit. The preview shows the transcribed speech simultaneously as speech is being recognised, and the note form displays recognised speech which sound complete, as in a complete sentence. separate sounds are played when the speech recognition service is started and stopped, as a cue to users. The app listens in the language provided by the user agent. It allows to download the transcript, which is split into a new line at every period, as a text file.\
+ Using modern Web APIs, the transcript can be copied to the clipboard, shared to system applications, and text files can be imported.
 
 This project was bootstrapped with [Vite](https://vitejs.dev).
 
