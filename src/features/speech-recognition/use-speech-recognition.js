@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
-import firstAudioUrl from "../../sounds/audio-start.mp3";
-import secondAudioUrl from "../../sounds/audio-end.mp3";
+import { useState, useRef } from 'react'
+import firstAudioUrl from '../../sounds/audio-start.mp3'
+import secondAudioUrl from '../../sounds/audio-end.mp3'
 
-const audioStart = new Audio(firstAudioUrl);
-const audioEnd = new Audio(secondAudioUrl);
+const audioStart = new Audio(firstAudioUrl)
+const audioEnd = new Audio(secondAudioUrl)
 
 export function useSpeechRecognition() {
   const [transcript, setTranscript] = useState({
@@ -11,87 +11,88 @@ export function useSpeechRecognition() {
     note: ``,
     listening: false,
     noMatch: false,
-  });
-  const [speechErrMessage, setSpeechErrMessage] = useState(``);
+  })
+  const [speechErrMessage, setSpeechErrMessage] = useState(``)
 
-  const updateStateConfig = (stateValue) => {
-    setTranscript((prev) => ({ ...prev, ...stateValue }));
-  };
+  const updateStateConfig = stateValue => {
+    setTranscript(prev => ({ ...prev, ...stateValue }))
+  }
 
   const Recognition =
-    new window.webkitSpeechRecognition() || new window.SpeechRecognition();
-  Recognition.interimResults = true;
+    new window.webkitSpeechRecognition() || new window.SpeechRecognition()
+  Recognition.continuous = true
+  Recognition.interimResults = true
   const speechRecVarsRef = useRef({
     clicked: false,
     stopped: false,
-  });
+  })
 
   const startSpeechRec = () => {
     // calling Recognition.start() more than once throws an error
     if (!speechRecVarsRef.current.clicked) {
-      Recognition.start();
-      audioEnd.pause();
-      audioEnd.currentTime = 0;
-      audioStart.play();
-      updateStateConfig({ listening: true });
-      speechRecVarsRef.current.clicked = true;
-      speechRecVarsRef.current.stopped = false;
+      Recognition.start()
+      audioEnd.pause()
+      audioEnd.currentTime = 0
+      audioStart.play()
+      updateStateConfig({ listening: true })
+      speechRecVarsRef.current.clicked = true
+      speechRecVarsRef.current.stopped = false
     }
-  };
+  }
   const stopSpeechRec = (_, isBlurredBySameElement) => {
     if (speechRecVarsRef.current.clicked) {
-      audioStart.pause();
-      audioStart.currentTime = 0;
-      !isBlurredBySameElement && audioEnd.play();
-      Recognition.stop();
-      updateStateConfig({ listening: false });
-      setSpeechErrMessage(``);
-      speechRecVarsRef.current.clicked = false;
-      speechRecVarsRef.current.stopped = true;
+      audioStart.pause()
+      audioStart.currentTime = 0
+      !isBlurredBySameElement && audioEnd.play()
+      Recognition.stop()
+      updateStateConfig({ listening: false })
+      setSpeechErrMessage(``)
+      speechRecVarsRef.current.clicked = false
+      speechRecVarsRef.current.stopped = true
     }
-  };
+  }
   Recognition.onaudiostart = () => {
-    updateStateConfig({ listening: true });
-  };
+    updateStateConfig({ listening: true })
+  }
   Recognition.onaudioend = () => {
-    updateStateConfig({ listening: false });
-  };
+    updateStateConfig({ listening: false })
+  }
   Recognition.onnomatch = () => {
-    updateStateConfig({ noMatch: true });
-  };
-  Recognition.onresult = (evt) => {
-    updateStateConfig({ noMatch: false });
-    const speechRecResult = evt.results;
-    [...speechRecResult].forEach((currentSpeechRes) => {
-      setTranscript((prev) => {
-        return { ...prev, preview: currentSpeechRes[0].transcript };
-      });
+    updateStateConfig({ noMatch: true })
+  }
+  Recognition.onresult = evt => {
+    updateStateConfig({ noMatch: false })
+    const speechRecResult = evt.results
+    ;[...speechRecResult].forEach(currentSpeechRes => {
+      setTranscript(prev => {
+        return { ...prev, preview: currentSpeechRes[0].transcript }
+      })
       // if recognised speech sounds like a complete sentence, then add it to the note.
       if (currentSpeechRes.isFinal) {
-        setTranscript((prev) => {
+        setTranscript(prev => {
           return {
             ...prev,
             note: prev.note + ` ` + currentSpeechRes[0].transcript,
-          };
-        });
+          }
+        })
       }
-    });
-  };
+    })
+  }
   Recognition.onend = () => {
-    if (speechRecVarsRef.current.stopped) return;
+    if (speechRecVarsRef.current.stopped) return
     // to make the Web Speech API listen continuously
-    Recognition.start();
-    speechRecVarsRef.current.clicked = true;
-    updateStateConfig({ listening: true });
-  };
-  Recognition.onerror = (evt) => {
-    !speechRecVarsRef.current.stopped && setSpeechErrMessage(evt.error);
-  };
+    Recognition.start()
+    speechRecVarsRef.current.clicked = true
+    updateStateConfig({ listening: true })
+  }
+  Recognition.onerror = evt => {
+    !speechRecVarsRef.current.stopped && setSpeechErrMessage(evt.error)
+  }
   return {
     transcript,
     setTranscript,
     speechErrMessage,
     startSpeechRec,
     stopSpeechRec,
-  };
+  }
 }
