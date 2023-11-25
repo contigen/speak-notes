@@ -20,6 +20,7 @@ export function useSpeechRecognition() {
 
   const Recognition =
     new window.webkitSpeechRecognition() || new window.SpeechRecognition()
+  Recognition.continuos = true
   Recognition.interimResults = true
   const speechRecVarsRef = useRef({
     clicked: false,
@@ -63,24 +64,19 @@ export function useSpeechRecognition() {
     updateStateConfig({ noMatch: false })
     const speechRecResult = evt.results
     let idx = evt.resultIndex
-    for (; idx < speechRecResult.length; ) {
-      const currentSpeechResult = speechRecResult[idx]
-      const currentSpeechTranscipt = speechRecResult[idx][0].transcript
-
-      if (currentSpeechResult.isFinal) {
-        setTranscript(prev => {
-          return {
-            ...prev,
-            note: prev.note + ` ` + currentSpeechTranscipt,
-          }
-        })
-      } else {
-        setTranscript(prev => {
-          return { ...prev, preview: currentSpeechTranscipt }
-        })
-        // if recognised speech sounds like a complete sentence, then add it to the note.
-        ++idx
-      }
+    const currentSpeechResult = speechRecResult[idx]
+    const currentSpeechTranscript = speechRecResult[idx][0].transcript
+    setTranscript(prev => {
+      return { ...prev, preview: currentSpeechTranscript }
+    })
+    // if recognised speech sounds like a complete sentence, then add it to the note.
+    if (currentSpeechResult.isFinal) {
+      setTranscript(prev => {
+        return {
+          ...prev,
+          note: prev.note + ` ` + currentSpeechTranscript,
+        }
+      })
     }
   }
   Recognition.onend = () => {
