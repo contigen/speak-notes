@@ -20,7 +20,6 @@ export function useSpeechRecognition() {
 
   const Recognition =
     new window.webkitSpeechRecognition() || new window.SpeechRecognition()
-  Recognition.continuous = true
   Recognition.interimResults = true
   const speechRecVarsRef = useRef({
     clicked: false,
