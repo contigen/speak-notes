@@ -67,10 +67,6 @@ export function useSpeechRecognition() {
       const currentSpeechResult = speechRecResult[idx]
       const currentSpeechTranscipt = speechRecResult[idx][0].transcript
 
-      setTranscript(prev => {
-        return { ...prev, preview: currentSpeechTranscipt }
-      })
-      // if recognised speech sounds like a complete sentence, then add it to the note.
       if (currentSpeechResult.isFinal) {
         setTranscript(prev => {
           return {
@@ -78,8 +74,13 @@ export function useSpeechRecognition() {
             note: prev.note + ` ` + currentSpeechTranscipt,
           }
         })
+      } else {
+        setTranscript(prev => {
+          return { ...prev, preview: currentSpeechTranscipt }
+        })
+        // if recognised speech sounds like a complete sentence, then add it to the note.
+        ++idx
       }
-      ++idx
     }
   }
   Recognition.onend = () => {
