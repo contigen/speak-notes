@@ -63,20 +63,25 @@ export function useSpeechRecognition() {
   Recognition.onresult = evt => {
     updateStateConfig({ noMatch: false })
     const speechRecResult = evt.results
-    ;[...speechRecResult].forEach(currentSpeechRes => {
+    let idx = evt.resultIndex
+    for (; idx < speechRecResult.length; ) {
+      const currentSpeechResult = speechRecResult[idx]
+      const currentSpeechTranscipt = speechRecResult[idx][0].transcript
+
       setTranscript(prev => {
-        return { ...prev, preview: currentSpeechRes[0].transcript }
+        return { ...prev, preview: currentSpeechTranscipt }
       })
       // if recognised speech sounds like a complete sentence, then add it to the note.
-      if (currentSpeechRes.isFinal) {
+      if (currentSpeechResult.isFinal) {
         setTranscript(prev => {
           return {
             ...prev,
-            note: prev.note + ` ` + currentSpeechRes[0].transcript,
+            note: prev.note + ` ` + currentSpeechTranscipt,
           }
         })
       }
-    })
+      ++idx
+    }
   }
   Recognition.onend = () => {
     if (speechRecVarsRef.current.stopped) return
