@@ -15,6 +15,11 @@ This project was bootstrapped with [Vite](https://vitejs.dev).
 - Some browsers use a server-based recognition engine. The audio is sent to a web service for recognition processing, so it works online only.
 - poor results in case of poor network signal, apparently.
 
+## Demo
+
+https://github.com/user-attachments/assets/69f92096-76b3-4e78-9eeb-fcdb3865ad2e
+
+
 ## Usage
 
 Give credits if you'll be using.
